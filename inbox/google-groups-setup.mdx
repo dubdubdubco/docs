@@ -1,0 +1,204 @@
+---
+title: "Connect a Google Workspace Group inbox"
+sidebarTitle: "Google Workspace Group inbox"
+---
+
+## Overview
+
+A **Google Group** is a shared address (like `support@yourcompany.com`) that delivers email to several people at once. It’s not a normal mailbox — it’s more like a list. That makes connecting it to Weav slightly different from connecting a regular email address.
+
+You have two ways to connect a Google Group to Weav. Both work; one needs Google Workspace **admin** access, and one only needs **Group owner** access.
+
+| Method | Who can do it | When to use it |
+| :-- | :-- | :-- |
+| **Default Routing (recommended)** | Google Workspace **admin** | You want the cleanest setup. Works for any group, with no changes to the group itself. |
+| **Add Weav as a Group member** | **Group owner** | You don’t have admin access to Google Workspace, or you want the group to keep working normally for your team too. |
+
+<Info>
+  This guide covers the **inbound** side — receiving customer emails sent to your group. To **send replies** from your group address (e.g. `support@yourcompany.com`), you’ll also need to set up your domain — see [Add DNS records at your domain provider](/inbox/dns-settings).
+</Info>
+
+---
+
+## Before you begin
+
+Make sure you have:
+
+- A Google Group already set up (e.g. `support@yourcompany.com`)
+- Either **Google Workspace admin** access (for Method 1), **or** access to manage your Group as an **owner** (for Method 2)
+- Access to **Settings → Inbox Settings** in Weav
+
+You’ll also need your **Weav inbox address** — a special address Weav gives you that looks like `workspace@weav-mail.com (This is only an example, use the workspace email given to you in Weav)`. You’ll see it in Weav after you add your group address.
+
+---
+
+## Step 1: Add your group address in Weav
+
+Do this in **Weav** first — it gives you the Weav inbox address you’ll need on the Google side.
+
+1. In Weav, go to **Settings → Email**
+2. Click **Add Email Address**
+3. Enter your **Group’s email address** (e.g. `support@yourcompany.com`)
+4. Choose:
+   - **Inbound** if you only want to receive emails into Weav
+   - **Both** if you also want to send replies from this address
+5. Click **Save**
+6. Find your new address in the list and click **Verify** in the **Incoming** column. Weav will show you an internal address that looks like `workspace@weav-mail.com` — **copy this address**, you’ll paste it into Google in the next step.
+
+<Tip>
+  Keep this Weav tab open. After you finish the Google steps, you’ll come back here to run the **Test Forwarding** step.
+</Tip>
+
+---
+
+## Step 2: Send group emails to Weav (pick one method)
+
+### Method 1: Default Routing (recommended, requires Google Workspace admin)
+
+This is the cleanest setup. You’ll add a routing rule in the Google Workspace Admin Console that automatically sends emails for your group address to Weav. The group itself doesn’t change — your team can still receive group mail normally.
+
+#### In Google Workspace
+
+1. Sign in to the **Google Workspace Admin Console** at [admin.google.com](https://admin.google.com) with an admin account.
+2. Go to **Apps → Google Workspace → Gmail**.
+3. Scroll to **Default routing** and click **Configure**.
+4. Set up the rule:
+   - In **Envelope recipient**, choose **Single recipient** and enter your **group address** (e.g. `support@yourcompany.com`).
+   - In the action section, check **Also deliver to** and enter the **Weav inbox address** you copied in Step 1 (e.g. `workspace@weav-mail.com`).
+   - Under **Options**, select **Perform this action on non-recognized and recognized addresses**.
+5. Click **Save** at the bottom of the rule.
+
+<Info>
+  We use **Also deliver to**, not **Change envelope recipient**. This way, your group keeps receiving messages as it does today — Weav just gets a copy.
+</Info>
+
+#### In Weav
+
+1. Return to **Settings → Inbox Settings**.
+2. Click **Test Forwarding** (or the **Verify** button) for your group address.
+3. Weav sends a test email from `Weav <hello@weav.com>`. As soon as that test email reaches Weav through your routing rule, the address is automatically marked verified.
+
+<Warning>
+  Default Routing changes can take up to **24 hours** to apply, though they often work within a few minutes. If verification doesn’t succeed right away, wait a few minutes and click **Test Forwarding** again.
+</Warning>
+
+---
+
+### Method 2: Add Weav as a Group member (no admin access needed)
+
+Use this method if you’re a Group owner but **not** a Workspace admin. You’ll add your Weav inbox address as an external member of the Group, so Google delivers a copy of every group email to Weav.
+
+#### In Google Groups
+
+1. Go to **Google Groups** at [groups.google.com](https://groups.google.com) and open your group (e.g. `support@yourcompany.com`).
+2. In the left menu, click **Members**.
+3. Click **Add members**.
+4. In **Group members**, paste your **Weav inbox address** (the `workspace@weav-mail.com` address you copied in Step 1).
+5. Set **Subscription** to **Each email** (so every message is delivered, not digested).
+6. Click **Add members**.
+
+<Warning>
+  If you see an error like “**External members aren’t allowed**” or “**This domain doesn’t allow external members**,” your Workspace administrator has external members disabled. Either ask them to allow external members for this group, or use **Method 1** instead.
+</Warning>
+
+#### Check your group settings (still in Google)
+
+A few group settings can quietly block emails from reaching Weav. Confirm these:
+
+1. In your Group, go to **Group settings → Posting policies**:
+   - **Who can post**: set to **Anyone on the web** (or at minimum, allow posts from outside your organization). If only members can post, customer emails will be rejected.
+   - **Message moderation**: set to **No moderation**. If messages are held for moderation, the verification email will sit in a queue and the test will fail.
+2. In **Group settings → Email options**:
+   - Make sure **Subject prefix** is empty (or be aware Weav will see it on every subject line).
+
+<Tip>
+  If your Workspace admin requires moderation for external posts, ask them to **allow** `hello@weav.com` so the Weav verification test isn’t held in moderation.
+</Tip>
+
+#### In Weav
+
+1. Return to **Settings → Inbox Settings**.
+2. Click **Test Forwarding** (or the **Verify** button) for your group address.
+3. Weav sends a test email from `Weav <hello@weav.com>` to your group. If your group settings are correct, the test will be delivered to Weav and the address will be marked verified within a couple of minutes.
+
+---
+
+## Step 3: Send outgoing emails from your group address
+
+If you also want to **send** replies from `support@yourcompany.com` (instead of from the default `workspace@weav-mail.com`), you’ll need to authenticate your domain.
+
+Follow [Add DNS records at your domain provider](/inbox/dns-settings) to add the **DKIM** and **Return-Path** records Weav shows you. Once your domain is verified, replies from Weav will go out as your group address.
+
+<Info>
+  You don’t need to do this just to **receive** group emails. It’s only required if you want outbound messages from Weav to appear as coming from your group address.
+</Info>
+
+---
+
+## Common issues and fixes
+
+### The verification test never succeeds
+
+The test email is sent from `Weav <hello@weav.com>` and has to reach Weav within **5 minutes**. Most failures fall into one of these buckets:
+
+- **Method 1 (Default Routing):** The rule may still be propagating. Wait a few minutes and try again.
+- **Method 2 (External member):** Your group is holding the test message for moderation. Approve the moderated message, or set **Message moderation** to **No moderation** and rerun the test.
+- **Either method:** Your group rejects external senders. Allow posts from outside your organization, or whitelist `hello@weav.com`.
+
+### Customer emails come into Weav, but the customer is wrong (it shows as your group address)
+
+This happens when Google Groups **rewrites the sender** to be the group address. To fix it:
+
+1. In your Google Group, go to **Group settings → Posting policies**.
+2. Look for any setting like **Post replies to → the group** or **Set sender as group**. Change it so replies and posts go to the **original author**, not to the group.
+3. If you can’t change this, switch to **Method 1 (Default Routing)** — Default Routing preserves the original sender automatically.
+
+### Customer emails are being marked as spam in Weav
+
+Forwarding through a group can break SPF, which raises the spam score on relayed messages. Fix this by adding the customer’s domain (or a partner domain) to your **Trusted Senders** list:
+
+1. In Weav, go to **Settings → Email → Preferences.**
+2. Find **Trusted Domains** and add the domain (e.g. `customerdomain.com`).
+3. Emails from that domain will skip spam filtering.
+
+### Replies from my team aren’t threading correctly
+
+Make sure your Google Group isn’t configured to rewrite the **Message-ID** header. The default Google Group settings preserve it. If you’ve enabled **conversation history** rewriting or moderation that modifies headers, switch to **Method 1 (Default Routing)** instead.
+
+### My team still wants to see group emails in Gmail
+
+Both methods support this:
+
+- **Method 1 (Default Routing)** uses **Also deliver to**, so your team keeps receiving group mail in Gmail and Weav gets a copy.
+- **Method 2 (External member)** keeps the group itself working — you’ve just added Weav as an additional member.
+
+---
+
+## Status reference
+
+| Status | Meaning | What to do |
+| :-- | :-- | :-- |
+| Verified | Your group is connected and forwarding to Weav | No action needed |
+| Pending | Waiting for the verification test to arrive at Weav | Wait a few minutes, then click **Test Forwarding** |
+| Not tested | You haven’t run the forwarding test yet | Click **Test Forwarding** |
+| Failed | The test didn’t reach Weav within 5 minutes | Check group settings (above), then retry |
+
+---
+
+## FAQ
+
+### Do I need admin access to Google Workspace?
+
+Only for **Method 1 (Default Routing)**. **Method 2** works with just Group owner access. If you’re unsure which you have, try Method 2 first — if Google blocks you from adding an external member, you’ll know you need admin help (or Method 1).
+
+### Will my team still get group emails in their personal inbox?
+
+Yes, with either method. Method 1 sends Weav a copy via routing; Method 2 just adds Weav as another group member.
+
+### Can I connect more than one group to Weav?
+
+Yes. Repeat these steps for each group address you want to connect.
+
+### Can I connect a group from a different domain?
+
+Yes. The setup is the same — you add the group’s address in Weav and configure forwarding (or membership) on the Google side.

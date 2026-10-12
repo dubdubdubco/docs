@@ -1,0 +1,296 @@
+---
+title: "Weav MCP"
+sidebarTitle: "MCP"
+description: "Learn how to connect AI tools to your Weav workspace with the Model Context Protocol (MCP). Authenticate with OAuth, then search conversations, help customers, and update training data."
+---
+
+# Model Context Protocol (MCP)
+
+> Connect AI tools to your Weav workspace so they can search conversations, help customers, and update your knowledge base.
+
+The Weav MCP server lets AI tools access your workspace through the [Model Context Protocol](https://modelcontextprotocol.io/introduction). After a workspace admin or owner completes OAuth consent, those tools can work with conversations, customers, and training data in that workspace.
+
+Use it to:
+
+- Search and open support conversations from an AI assistant
+- Look up customer profiles and recent history
+- Reply to conversations or update status, priority, and assignee
+- Search, add, resync, or delete knowledge base items
+
+<Note>
+  Only a workspace **admin** or **owner** can finish consent. Other teammates can start the connection, but Weav will ask an admin or owner to approve it.
+</Note>
+
+---
+
+## What is Model Context Protocol?
+
+MCP is a protocol that lets AI tools connect to Weav in a secure, standardized way. It gives models a structured way to:
+
+- Find and retrieve Weav data (conversations, customers, and knowledge base items)
+- Call specific tools Weav exposes
+- Keep workspace context while you work in an AI assistant
+
+---
+
+## How MCP works
+
+Weav hosts a remote MCP server that follows the authenticated remote MCP specification. The server handles requests from AI tools and exposes workspace data through a secure interface.
+
+**Connection URL:**
+
+`https://mcp.weav.com/mcp`
+
+When an AI tool needs access to Weav:
+
+1. The tool connects to `https://mcp.weav.com/mcp`.
+2. Weav opens a browser consent screen. Sign in if you are not already signed in.
+3. A workspace admin or owner approves access.
+4. The tool can call Weav tools for that workspace until the connection is revoked.
+
+<Tip>
+  Use the full URL, including `/mcp`. Discovery metadata advertises this endpoint; the hostname alone is not the MCP server.
+</Tip>
+
+---
+
+## Benefits of using MCP
+
+- **Secure access** — All data access is authenticated. Consent is limited to admins and owners, and tokens are scoped to one workspace.
+- **Standardized interface** — The same connection pattern works across MCP-compatible AI tools.
+- **Workspace context** — Assistants can work with your inbox, customers, and knowledge base instead of copying data by hand.
+- **Faster support work** — Triage conversations, reply to customers, and update training data from the tools you already use.
+
+---
+
+## Available tools
+
+The Weav MCP server provides **11 tools**. Search tools return up to 50 results (default 15). IDs are workspace-scoped UUIDs.
+
+### Conversations
+
+#### search\_conversations
+
+Search support conversations the same way the Weav inbox does. Only conversations with at least one message are returned. Spam is excluded unless `spam` is `true`.
+
+| Parameter | Required | Type | Description |
+| --- | --- | --- | --- |
+| `query` | No | string | Search subject, customer name, or email. Max 255 characters. |
+| `status` | No | string | `open` or `closed`. |
+| `channel` | No | string | `email` or `chat`. |
+| `spam` | No | boolean | When `true`, return spam conversations instead of inbox conversations. Default `false`. |
+| `limit` | No | integer | Maximum results (1–50). Default `15`. |
+
+#### get\_conversation
+
+Get a conversation, including recent messages.
+
+| Parameter | Required | Type | Description |
+| --- | --- | --- | --- |
+| `conversation_id` | Yes | string | Conversation UUID from `search_conversations`. |
+
+#### send\_reply
+
+Post a reply to a conversation as a workspace teammate.
+
+| Parameter | Required | Type | Description |
+| --- | --- | --- | --- |
+| `conversation_id` | Yes | string | Conversation UUID. |
+| `content` | Yes | string | Reply body. |
+
+#### update\_conversation
+
+Update a conversation’s status, priority, or assignee. This tool does not delete conversations.
+
+| Parameter | Required | Type | Description |
+| --- | --- | --- | --- |
+| `conversation_id` | Yes | string | Conversation UUID. |
+| `status` | No | string | `open` or `closed`. |
+| `priority` | No | string | `low`, `normal`, `high`, or `urgent`. |
+| `assignee_id` | No | string | User or agent UUID. Omit to leave unchanged. Send `null` to unassign. |
+| `assignee_type` | No | string | `user` or `agent`. Required when setting `assignee_id`. |
+
+---
+
+### Customers
+
+#### search\_customers
+
+Search customers by name or email.
+
+| Parameter | Required | Type | Description |
+| --- | --- | --- | --- |
+| `query` | No | string | Search name or email. |
+| `limit` | No | integer | Maximum results (1–50). Default `15`. |
+
+#### get\_customer
+
+Get a customer profile, company, and recent conversations.
+
+| Parameter | Required | Type | Description |
+| --- | --- | --- | --- |
+| `customer_id` | Yes | string | Customer UUID from `search_customers`. |
+
+---
+
+### Knowledge base
+
+#### search\_training\_data
+
+Search knowledge base (training data) items by title, description, type, or source.
+
+| Parameter | Required | Type | Description |
+| --- | --- | --- | --- |
+| `query` | No | string | Search title, description, or source. |
+| `type` | No | string | `text`, `url`, `file`, `video`, or `qa`. |
+| `limit` | No | integer | Maximum results (1–50). Default `15`. |
+
+#### get\_training\_data
+
+Get a single knowledge base item.
+
+| Parameter | Required | Type | Description |
+| --- | --- | --- | --- |
+| `training_data_id` | Yes | string | Training data UUID from `search_training_data`. |
+
+#### add\_training\_data
+
+Add knowledge base content as text, Q&A, or a website URL. Every agent in the workspace is given access automatically.
+
+<Note>
+  MCP can add `text`, `qa`, and `url` sources. File and video sources can be searched if they already exist in Training; they cannot be uploaded through this tool.
+</Note>
+
+| Parameter | Required | Type | Description |
+| --- | --- | --- | --- |
+| `type` | Yes | string | `text`, `qa`, or `url`. |
+| `content` | When `type` is `text` | string | The text to train on. |
+| `title` | No | string | Optional title. Max 255 characters. |
+| `question` | When `type` is `qa` | string | The question. |
+| `answer` | When `type` is `qa` | string | The answer. |
+| `url` | When crawling a site | string | Website URL to crawl. Weav discovers pages on the site and trains on them. Max 2048 characters. |
+| `urls` | When training specific pages | string\[\] | Specific page URLs to train without crawling the rest of the site. Max 100 URLs. |
+
+Use `url` for a whole website. Use `urls` when you only want listed pages.
+
+#### delete\_training\_data
+
+Delete a knowledge base item. For website/URL sources, this also deletes discovered URLs and chunks.
+
+<Warning>
+  Deleting training data cannot be undone from the MCP client.
+</Warning>
+
+| Parameter | Required | Type | Description |
+| --- | --- | --- | --- |
+| `training_data_id` | Yes | string | Training data UUID. |
+
+#### resync\_training\_data
+
+Re-scrape an existing URL knowledge base item.
+
+| Parameter | Required | Type | Description |
+| --- | --- | --- | --- |
+| `training_data_id` | Yes | string | UUID of a URL training data item. |
+
+---
+
+## Setting things up
+
+### Authentication
+
+The MCP server uses **OAuth**. When you connect, Weav opens a browser consent screen.
+
+- Only a workspace **admin** or **owner** can finish consent
+- Access is scoped to that workspace
+- Admins can disconnect a client later in Settings
+
+There is no API-key or bearer-token shortcut. Connect through OAuth.
+
+Path: **Settings → Developers → MCP connections**
+
+1. Open **Settings**.
+2. Go to **Developers**.
+3. Select **MCP connections**.
+4. Review connected clients, or disconnect one to revoke access immediately.
+
+---
+
+### Configuration examples
+
+<Note>
+  The example below is a generic template. Always refer to your AI tool’s official documentation for the latest MCP setup steps. Details vary between tools and versions.
+</Note>
+
+```json
+{
+  "mcpServers": {
+    "weav": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://mcp.weav.com/mcp"
+      ]
+    }
+  }
+}
+```
+
+After you save the config, restart the AI tool. The first connection opens a browser window for Weav sign-in and consent.
+
+---
+
+## Permissions
+
+The Weav MCP server issues tokens with the `mcp:use` ability. That ability is granted when an admin or owner completes consent for the workspace.
+
+If consent is declined, or the connection is disconnected in Settings, tool calls fail until someone reconnects.
+
+---
+
+## Debugging and troubleshooting
+
+### Authentication problems
+
+If the browser consent flow is stuck or the client keeps asking you to sign in:
+
+```text
+# Stop existing mcp-remote processes
+pkill -f mcp-remote
+
+# Clear the local MCP auth cache
+rm -rf ~/.mcp-auth
+```
+
+Then restart the AI tool and connect again.
+
+## Connection testing
+
+```text
+# Starts the OAuth browser flow
+npx mcp-remote https://mcp.weav.com/mcp
+```
+
+## View active MCP connections
+
+```text
+ps aux | grep mcp-remote | grep -v grep
+```
+
+### Error handling
+
+- Authentication failures — Restart the OAuth flow. Confirm a workspace admin or owner completed consent.
+- 401 Unauthorized — The access token is missing, expired, or the connection was revoked in Settings.
+- Tool errors — Confirm the IDs you pass belong to the connected workspace.
+
+### Troubleshooting tips
+
+Check that:
+
+- The URL is `https://mcp.weav.com/mcp` (including `/mcp`)
+- You restarted the AI tool after changing the config
+- A workspace admin or owner completed the browser consent screen
+- The client still appears under Settings → Developers → MCP connections
+- Conversation, customer, and training data IDs are UUIDs from this workspace
+
+If a client is stuck, disconnect it in Settings and connect again.

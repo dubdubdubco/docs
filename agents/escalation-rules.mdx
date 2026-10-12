@@ -1,0 +1,103 @@
+---
+title: "Escalation Rules"
+description: "Control when your AI agent hands off conversations to your team using escalation rules."
+---
+
+## What are escalation rules?
+
+Escalation rules tell your Weav AI agent **when** to hand off a conversation to a human teammate instead of answering it. When a customer message matches a rule, the agent stops replying as usual, sends a short handoff message, and the conversation is assigned to a teammate (or to your inbox if you use a default escalation assignee).
+
+Rules are defined as **conditions** in plain language. A separate AI step evaluates each new customer message against your rules and picks the **first** matching rule, if any. That way you can prioritize (e.g. “speak to a human” before “billing question”) by ordering your rules.
+
+Escalation rules are configured **per channel**: you can have different rules (and different assignees) for **Chat** and **Email**.
+
+---
+
+## How escalation rules are evaluated
+
+1. **When**: After the customer sends a message and the agent has enough context, Weav checks escalation **before** generating a normal reply. Only the **latest customer message** in the thread is used for the check.
+2. **Matching**: An internal classifier compares that message to each of your rules in order. It returns the **first** rule whose condition “clearly relates” to what the customer said. If none match, the agent continues and answers as usual.
+3. **Result**: If a rule matches, the conversation is escalated: the agent sends a single handoff message (e.g. “I’m sorry about the frustration — let me get you to a teammate who can help.”), the conversation is reassigned to the rule’s assignee (or your default escalation assignee), and a system note is added. The agent does **not** generate a full answer in that turn.
+
+Rules are **not** simple keyword filters. The system uses semantic understanding so that phrases like “I need to talk to someone real” can match a rule such as “If the customer asks to speak with a human,” even if the exact words differ.
+
+---
+
+## Where to configure escalation rules
+
+- **Chat**: In the Weav dashboard, open your **Agent** → **Chat** settings → **Deploy** section → **Escalation rules** (Manage).
+- **Email**: Same agent → **Email** settings → **Deploy** section → **Escalation rules** (Manage).
+
+Each rule has:
+
+- **Condition**: A short description of when to escalate (e.g. “If the customer mentions a refund or return”).
+- **Assignee** (optional): A teammate to assign the conversation to. If you leave this blank, Weav uses the channel’s **Escalation assignee** (the default person for that channel).
+
+Rule order matters: the first matching rule wins. Put the most important or urgent cases at the top.
+
+---
+
+## Good examples of escalation conditions
+
+These are clear, intent-based conditions that work well with the classifier:
+
+| Condition                                                         | Why it works well                                                     |
+| ----------------------------------------------------------------- | --------------------------------------------------------------------- |
+| If the customer sounds angry, frustrated, or upset                | Describes a state; matches many ways of expressing frustration.       |
+| If the customer asks or demands to speak with a human             | Clear intent; catches “real person,” “human agent,” “not a bot,” etc. |
+| If the customer asks to speak with a manager or supervisor        | Specific request type; easy for the model to recognize.               |
+| If the customer requests a refund or return                       | Concrete topic; covers “refund,” “return,” “money back,” etc.         |
+| If the customer mentions a legal threat or legal action           | Sensitive topic; good to escalate consistently.                       |
+| If the customer says they want to cancel their account            | Clear business outcome; avoids the agent trying to “save” them alone. |
+| If the customer reports a security concern or compromised account | High-priority, sensitive; benefits from human handling.               |
+
+---
+
+## Examples to avoid
+
+These tend to be too vague, too narrow, or too literal and can lead to missed or wrong escalations:
+
+| Condition                                  | Why to avoid                                                                                                                             |
+| ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Refund                                     | Too short; no “if” or context. Prefer: “If the customer requests a refund or return.”                                                    |
+| When they say the word “manager”           | Too literal; “I’ll ask my manager” might false-positive. Prefer intent: “If the customer asks to speak with a manager.”                  |
+| Complaints                                 | Too broad; almost any negative message could match. Be more specific (e.g. “If the customer is angry or demands to speak with a human”). |
+| If the customer writes more than 100 words | Not about intent or topic; the classifier is built for meaning, not length.                                                              |
+| If the customer uses ALL CAPS              | Focuses on formatting, not content; unreliable and often irrelevant.                                                                     |
+| If the message contains “@” or “#”         | Same issue; symbols don’t reliably indicate when to escalate.                                                                            |
+
+---
+
+## Tips for writing escalation rules
+
+1. **Use “If…”**\
+   Start with “If the customer…” so the condition reads like a single, clear criterion.
+2. **Describe intent or topic, not exact words**\
+   “If the customer asks for a refund or return” is better than “If the customer says refund.”
+3. **One main idea per rule**\
+   Keep each rule to one situation (e.g. human handoff, refunds, legal, security). Split into two rules if you have two distinct cases.
+4. **Order by priority**\
+   Put “speak to a human” and “angry/frustrated” above “billing question” if you want those to take precedence.
+5. **Use the default escalation assignee**\
+   Set a default assignee for the channel so rules without a specific assignee still go to someone. Rule-level assignees override the default.
+
+---
+
+## What happens after an escalation?
+
+- The customer sees one agent message that explains they’re being transferred (tone is adjusted if they seem frustrated).
+- The conversation is assigned to the chosen teammate (or unassigned if no assignee is set).
+- A system event is recorded (e.g. “escalated to [Name]” or “unassigned via escalation”).
+- The conversation appears in the Inbox for your team to pick up; you can filter or report on “escalated” conversations.
+
+Escalation rules only apply when the conversation is **assigned to the agent**. If a human is already assigned, the escalation step is skipped and the agent does not run.
+
+---
+
+## Summary
+
+- **Escalation rules** = conditions (in plain language) that tell the agent when to hand off to a human.
+- They are evaluated by a separate AI step on the **latest customer message**; the first matching rule wins.
+- Configure them **per channel** (Chat and Email) in your agent’s Deploy settings.
+- Write **clear, intent-based conditions** (good examples above) and avoid **vague or literal wording** (bad examples).
+- Order rules by priority and use the default escalation assignee so every escalation has an owner.

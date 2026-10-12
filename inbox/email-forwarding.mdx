@@ -1,0 +1,88 @@
+---
+title: "Email forwarding"
+description: "How to forward emails from your email address to Weav using Google Workspace, Microsoft 365, or other providers."
+---
+
+## Overview
+
+To receive customer emails in Weav, you forward messages from your support address (e.g. [support@yourdomain.com](mailto:support@yourdomain.com)) to your **Weav inbox address** (e.g. **{workspace}**@[weav-mail.com](http://weav-mail.com)). Weav then turns those emails into conversations in your inbox.
+
+**What you need:**
+
+1. Your **Weav inbox address** – You get this in Weav under **Settings → Email**. Add your support email address, then open **Setup inbound messaging** by clicking on the Verify button in the incoming column and copy the address shown (it looks like `workspace@weav-mail.com`).
+2. **Admin or mailbox access** at your email provider so you can change forwarding or routing rules.
+3. After configuring forwarding at your provider, return to Weav and use **Send test email** so Weav can verify that forwarding is working.
+
+Use the instructions below for your provider. For **Google Workspace** and **Microsoft 365**, we include step-by-step guidance. For **other providers** (e.g. Gmail, Outlook.com, iCloud), we summarize options and limitations.
+
+---
+
+## Configure email forwarding in Google Workspace
+
+This method is **recommended** for Google. It uses routing rules instead of a single mailbox, so it avoids per-user rate limits and you don’t need to create a dedicated mailbox.
+
+**You need:** Administrator access to Google Workspace.
+
+### Step-by-step
+
+1. Log in to the **Google Workspace Admin Console** at https://admin.google.com/ with an admin account.
+2. Go to **Apps** → **Google Workspace** → **Gmail**.
+3. In the **Gmail** settings, find **Default routing** and click **Configure** to add a new routing rule.
+4. When adding the rule:
+   - In **Envelope recipient**, enter the support address that should be forwarded (e.g. [support@yourdomain.com](mailto:support@yourdomain.com)).
+   - Under the envelope recipient option, choose **Change envelope recipient** and in **Replace recipient** enter your **Weav inbox address** (the one you copied from Weav, e.g. [yourworkspace@weav-mail.com](mailto:yourworkspace@weav-mail.com)).
+   - Save the rule in the Admin Console.
+5. Edit the rule you just created and in **Options** set:
+   - **Perform this action on non-recognized and recognized addresses.**
+6. In Weav, go to **Settings → Email**, open the inbound setup for that address, and click **Send test email** to verify forwarding.
+7. **Check:** In Gmail settings, ensure the option to **disable forwarding** is not turned on for the affected address, or it can block messages from reaching Weav.
+
+**Note:** Changes in Google Workspace can take up to 24 hours to apply, though they often work sooner.
+
+---
+
+## Configure email forwarding in Microsoft 365
+
+**You need:** Access to the Microsoft 365 Admin Center (admin or appropriate permissions).
+
+### Step-by-step
+
+1. Log in to the **Microsoft 365 Admin Center** at https://admin.microsoft.com/ with your admin account.
+2. Choose the mailbox you want to forward:
+   - **Shared mailbox:** Go to **Teams & groups** → **Shared mailboxes**, select the mailbox, then in **Email forwarding** click **Edit**.
+   - **User mailbox:** Go to **Users** → **Active users**, select the user, open the **Mail** tab, and in **Email forwarding** click **Manage email forwarding**.
+3. Turn on **Forward all email sent to this mailbox** and enter your **Weav inbox address** (the one you copied from Weav). Save and exit the Admin Center.
+4. In Weav, go to **Settings → Email**, open the inbound setup for that address, and click **Send test email** to verify forwarding.
+
+**Important:**
+
+- Configure forwarding in the **Microsoft 365 Admin Center**, not in Outlook on the web (OWA).
+- If you see **"Your organization does not allow external forwarding"**, your admin must allow external forwarding (e.g. in the Microsoft Defender portal under anti-spam outbound policy). Changes can take up to an hour to apply.
+- If your organization uses strict outbound policies, ensure **automatic forwarding** is allowed in the relevant anti-spam/outbound policy before verifying in Weav.
+
+---
+
+## Configure email forwarding in other providers
+
+These methods work for **low volume** only. Provider rate limits can delay or block messages if you exceed them.
+
+### Gmail (personal or non–Google Workspace)
+
+- Use **Settings → Forwarding and POP/IMAP** and add a forwarding address. Enter your Weav inbox address.
+- Be aware: Gmail limits how many messages you can send per day and how many recipients per message; forwarding counts toward those limits.
+- Avoid using **Google Groups** as the forwarding step if it changes the **From** header; that can break threading and identification in Weav. Prefer direct mailbox forwarding or, for higher volume, Google Workspace routing (see above).
+
+### Outlook (outlook.com / personal)
+
+- Prefer **redirect** over **forward** when your provider offers both. Redirect keeps the original sender, so replies and threading in Weav stay correct. Forward can make messages appear “from” the mailbox and may break threading.
+- Configure in the web Outlook settings (e.g. **Mail → Forwarding**) and enter your Weav inbox address.
+
+### iCloud Mail
+
+- Use **Settings → Mail → Forwarding** (or the equivalent in your iCloud Mail settings) and add your Weav inbox address.
+- Suitable for low volume; watch for any iCloud sending or forwarding limits.
+
+### General recommendation
+
+- Use a **direct mailbox** for forwarding when possible so the original sender and headers are preserved.
+- Avoid setups that change or strip the **From** header (e.g. some Google Groups configurations). Use **Google Workspace Default Routing** for higher volume with a Gmail/Workspace address.

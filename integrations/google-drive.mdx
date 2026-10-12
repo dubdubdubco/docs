@@ -1,0 +1,115 @@
+---
+title: "Google Drive"
+description: "Learn how to connect Google Drive with your Weav AI Agents"
+---
+
+<Frame>
+  ![Import Google Drive into Weav agents](/images/import-google-drive-weav.png)
+</Frame>
+
+The Google Drive integration lets you import files from Google Drive directly into your agents training data.
+
+Use it when your documentation content already lives in Google Drive. Search and train your agents on knowledge bases, FAQ spreadsheets, policy PDFs, onboarding docs, internal product guides.
+
+<Note>
+  Google Drive imports happen one file at a time and are not synced. If you change a document in Google Drive, re-import it in Weav to refresh it.
+</Note>
+
+---
+
+## Before you start
+
+You will need:
+
+- A Google account (personal or Google Workspace) with access to the files you want to import
+- The files you want to import already in Google Drive, in a supported format
+
+Best practices before importing:
+
+- Decide which agents should have access to the imported content
+- Make sure the source documents are clean, current, and customer-safe
+- Remove or redact any sensitive information you don't want the agent to use
+
+---
+
+## Import files from Google Drive
+
+Path: Training -\> \+ Add content -\> Google Drive
+
+1. Open [Training](https://app.weav.com/training).
+2. (Optional) Open a Training folder if you want the imports to land there.
+3. Click \+ Add content.
+4. Select Google Drive.
+5. Sign in with your Google account if prompted.
+6. Click Choose files from Google Drive.
+7. Select up to 20 files.
+8. Click Select.
+
+Weav queues your files for import and a confirmation appears. The new items show up in the Training table while they are processed in the background.
+
+<Tip>
+  You don't need an admin to enable this integration. Anyone who can add training content can import from Google Drive.
+</Tip>
+
+---
+
+## Supported file types
+
+With Google Drive, the following formats are supported. Files that don't have this file type are automatically filtered out.
+
+| File type | Notes |
+| --- | --- |
+| Google Docs | Converted to PDF for processing. |
+| Google Sheets | Converted to CSV for processing. |
+| PDF | Imported as-is. |
+| Microsoft Word | Both `.doc` and `.docx`. |
+| Plain text | `.txt` |
+| Markdown | `.md` |
+| CSV | Imported as-is. |
+| Rich Text Format | `.rtf` |
+
+<Note>
+  Selecting an entire folder is not supported. Pick the individual files you want to import.
+</Note>
+
+---
+
+## Manage which agents use imported files
+
+When a file is imported, it is attached to all of your agents by default — the same as any other training content.
+
+To change which agents can use a specific file:
+
+1. Go to your [Training](https://app.weav.com/training).
+2. Find the imported file in the Training table.
+3. Open the agent access menu for that file.
+4. Select the agents that should use this content.
+5. Save your changes.
+
+<Tip>
+  For example, if you have multiple agents for different topics such as a billing agent and a product agent, limit each imported file to the agents that should use it. This keeps each agent focused.
+</Tip>
+
+---
+
+## Best practices
+
+### Import only customer-safe content
+
+Imported content can be used by your agents to answer customers. Don't import internal-only documents, drafts, or anything you wouldn't want quoted back in a customer conversation.
+
+### Keep imports focused
+
+A small set of well-maintained documents will train your agent better than a large pile of mixed content. Start with your best documents and add more as you go.
+
+### Re-import when content changes
+
+Google Drive imports are not synced. When a source document changes in Drive, re-import it in Weav so the agent uses the latest version.
+
+### Use folders to organize imports
+
+If you keep your training content organized in Training folders in Weav, open the folder before clicking \+ Add content. Imports will land in that folder automatically.
+
+### Limit access by agent
+
+Not every agent needs every document. Use the agent access menu on each Training item to scope content to the right agents.

@@ -1,0 +1,2822 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Weav API",
+    "version": "1.0.0",
+    "description": "Public API for Weav workspace integrations.\nBase URL is versioned under /v1 and requires bearer token authentication.\nToken abilities are enforced:\n- `external-api:read` for read endpoints\n- `external-api:write` for write endpoints\n- `external-api:write` also grants read access\n"
+  },
+  "servers": [
+    {
+      "url": "https://api.weav.com/v1",
+      "description": "Production"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Agents"
+    },
+    {
+      "name": "Companies"
+    },
+    {
+      "name": "Conversations"
+    },
+    {
+      "name": "Customers"
+    },
+    {
+      "name": "Messages"
+    },
+    {
+      "name": "Training Data"
+    },
+    {
+      "name": "Webhooks"
+    }
+  ],
+  "paths": {
+    "/agents": {
+      "get": {
+        "tags": [
+          "Agents"
+        ],
+        "summary": "List agents",
+        "operationId": "listAgents",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/perPage"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated agents",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedAgents"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "summary": "Create agent",
+        "operationId": "createAgent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Agent created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Agent"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "description": "The model is set automatically to gpt-4o-mini."
+      }
+    },
+    "/agents/{id}": {
+      "get": {
+        "tags": [
+          "Agents"
+        ],
+        "summary": "Get agent",
+        "operationId": "getAgent",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Agent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Agent"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Agents"
+        ],
+        "summary": "Update agent",
+        "operationId": "updateAgent",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Agent updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Agent"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden (e.g. copilot update blocked)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "description": "Model updates are not supported via this endpoint."
+      },
+      "delete": {
+        "tags": [
+          "Agents"
+        ],
+        "summary": "Delete agent",
+        "operationId": "deleteAgent",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Agent deleted"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/companies": {
+      "get": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "List companies",
+        "operationId": "listCompanies",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/perPage"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated companies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedCompanies"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Create company",
+        "operationId": "createCompany",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompanyCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Company created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Company"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/companies/{id}": {
+      "get": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Get company",
+        "operationId": "getCompany",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Company",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Company"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Update company",
+        "operationId": "updateCompany",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompanyUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Company updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Company"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Delete company",
+        "operationId": "deleteCompany",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Company deleted"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/companies/{id}/customers": {
+      "get": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "List customers for company",
+        "operationId": "listCompanyCustomers",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          },
+          {
+            "$ref": "#/components/parameters/perPage"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated customers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedCustomers"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/conversations": {
+      "get": {
+        "tags": [
+          "Conversations"
+        ],
+        "summary": "List conversations",
+        "operationId": "listConversations",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/perPage"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "closed"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "channel",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "email",
+                "chat"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated conversations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedConversations"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Conversations"
+        ],
+        "summary": "Create conversation",
+        "operationId": "createConversation",
+        "description": "Assignment rules:\n- Assignees must belong to the same workspace as the API key.\n- Chat conversations can be assigned to users, unassigned, or only the conversation's original chat agent.\n- Email conversations can be assigned to users, unassigned, or only the workspace's active email agent.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConversationCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Conversation created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Conversation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid assignee or assignee type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/conversations/{id}": {
+      "get": {
+        "tags": [
+          "Conversations"
+        ],
+        "summary": "Get conversation",
+        "operationId": "getConversation",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Conversation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Conversation"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Conversations"
+        ],
+        "summary": "Update conversation",
+        "operationId": "updateConversation",
+        "description": "Assignment rules:\n- Assignees must belong to the same workspace as the API key.\n- Chat conversations can be assigned to users, unassigned, or only the conversation's original chat agent.\n- Email conversations can be assigned to users, unassigned, or only the workspace's active email agent.\n",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConversationUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Conversation updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Conversation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid assignee or assignee type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Conversations"
+        ],
+        "summary": "Delete conversation",
+        "operationId": "deleteConversation",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Conversation deleted"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/conversations/{id}/messages": {
+      "get": {
+        "tags": [
+          "Conversations"
+        ],
+        "summary": "List messages in conversation",
+        "operationId": "listConversationMessages",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          },
+          {
+            "$ref": "#/components/parameters/perPage"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated messages",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedMessages"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/customers": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "List customers",
+        "operationId": "listCustomers",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/perPage"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "in": "query",
+            "name": "is_lead",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated customers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedCustomers"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Create customer",
+        "operationId": "createCustomer",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Customer created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/customers/{id}": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Get customer",
+        "operationId": "getCustomer",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Customer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Update customer",
+        "operationId": "updateCustomer",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Customer updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Delete customer",
+        "operationId": "deleteCustomer",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Customer deleted"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/customers/{id}/conversations": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "List customer conversations",
+        "operationId": "listCustomerConversations",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          },
+          {
+            "$ref": "#/components/parameters/perPage"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated conversations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedConversations"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/messages": {
+      "get": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "List messages",
+        "operationId": "listMessages",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/perPage"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "in": "query",
+            "name": "conversation_id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sender_type",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "customer",
+                "user",
+                "agent",
+                "system"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated messages",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedMessages"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Create message",
+        "operationId": "createMessage",
+        "description": "Note: API currently validates sender_type as customer|user.\nThe API does not accept `metadata` or `is_ai_assisted` in requests.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Message created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid sender",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/messages/{id}": {
+      "get": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Get message",
+        "operationId": "getMessage",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Delete message",
+        "operationId": "deleteMessage",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Message deleted"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/training-data": {
+      "get": {
+        "tags": [
+          "Training Data"
+        ],
+        "summary": "List training data",
+        "operationId": "listTrainingData",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/perPage"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "in": "query",
+            "name": "type",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "text",
+                "url",
+                "file",
+                "video",
+                "qa"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "queued",
+                "processing",
+                "completed",
+                "failed"
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "is_processed",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated training data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedTrainingData"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Training Data"
+        ],
+        "summary": "Create training data",
+        "operationId": "createTrainingData",
+        "description": "Supported types:\n- text: requires content\n- file: requires multipart file upload\n- video: requires video_url\n- qa: requires question + answer\n- url: not accepted directly in this endpoint (use POST /training-data/url/process)\nThe API does not accept `metadata` in requests.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrainingDataCreateJsonRequest"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/TrainingDataCreateFileRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Training data created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingData"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid type or business rule",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "500": {
+            "description": "Creation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/training-data/{id}": {
+      "get": {
+        "tags": [
+          "Training Data"
+        ],
+        "summary": "Get training data",
+        "operationId": "getTrainingData",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Training data item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingData"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Training Data"
+        ],
+        "summary": "Update training data",
+        "operationId": "updateTrainingData",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrainingDataUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Training data updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrainingData"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        },
+        "description": "The API does not accept `metadata` in requests.\n"
+      },
+      "delete": {
+        "tags": [
+          "Training Data"
+        ],
+        "summary": "Delete training data",
+        "operationId": "deleteTrainingData",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Training data deleted"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/training-data/url/process": {
+      "post": {
+        "tags": [
+          "Training Data"
+        ],
+        "summary": "Process URLs into training data",
+        "operationId": "processTrainingDataUrls",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "urls"
+                ],
+                "properties": {
+                  "urls": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  },
+                  "title": {
+                    "type": "string",
+                    "nullable": true,
+                    "maxLength": 255
+                  },
+                  "agent_ids": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  },
+                  "auto_resync": {
+                    "type": "boolean",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "URLs accepted for processing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "training_data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "urls_count": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation or business rule failure (for example, NO_URLS_PROVIDED)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "description": "Processing failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "Creates URL training data from the provided URLs. In production, URL processing jobs are queued and run asynchronously."
+      }
+    },
+    "/training-data/url/exists": {
+      "get": {
+        "tags": [
+          "Training Data"
+        ],
+        "summary": "Check if a URL already exists",
+        "operationId": "checkTrainingDataUrlExists",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 2048
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "URL existence check result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "exists": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/training-data/{id}/resync-now": {
+      "post": {
+        "tags": [
+          "Training Data"
+        ],
+        "summary": "Manually trigger URL resync",
+        "operationId": "resyncTrainingDataNow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "URL training data UUID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resync jobs dispatched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "training_data_id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "urls_count": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Resync unavailable for this URL training data state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "description": "URL training data not found in current workspace",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {
+    "organization.event": {
+      "post": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Webhook delivery",
+        "description": "When subscribed events occur, Weav sends an HTTPS POST request to your configured webhook URL.\n\nVerification headers:\n- `X-Weav-Event`: event type\n- `X-Weav-Signature`: HMAC SHA-256 of the raw JSON body using your webhook secret\n- `Content-Type`: `application/json`\n\nDelivery behavior:\n- Any `2xx` response is treated as success\n- `410 Gone` deactivates the webhook immediately\n- Other non-2xx responses are retried up to 10 attempts with exponential backoff (1m, 2m, 4m, ...)\n- Webhooks are auto-deactivated after repeated permanent failures\n\nThis section is reference-only to document payload shape and verification guidance.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookEnvelope"
+              },
+              "examples": {
+                "conversationCreated": {
+                  "summary": "conversation.created",
+                  "value": {
+                    "event": "conversation.created",
+                    "id": "550e8400-e29b-41d4-a716-446655440000",
+                    "organization_id": "123e4567-e89b-12d3-a456-426614174000",
+                    "data": {
+                      "id": "019a5a3c-f1ce-7066-86ae-1ed35540a7ce",
+                      "title": "Help with my account",
+                      "status": "open",
+                      "priority": "normal",
+                      "channel": "email",
+                      "assignee_id": null,
+                      "assignee_type": null,
+                      "customer_id": "0197d061-63a9-73c5-b574-e49d8b7964fb",
+                      "created_at": "2025-11-06T17:35:34+00:00",
+                      "updated_at": "2025-11-06T17:35:34+00:00"
+                    }
+                  }
+                },
+                "customerMessageCreated": {
+                  "summary": "conversation.customer.message.created",
+                  "value": {
+                    "event": "conversation.customer.message.created",
+                    "id": "660e8400-e29b-41d4-a716-446655440001",
+                    "organization_id": "123e4567-e89b-12d3-a456-426614174000",
+                    "data": {
+                      "id": "770e8400-e29b-41d4-a716-446655440002",
+                      "conversation_id": "019a5a3c-f1ce-7066-86ae-1ed35540a7ce",
+                      "content": "I need help with my account",
+                      "sender_type": "customer",
+                      "sender_id": "0197d061-63a9-73c5-b574-e49d8b7964fb",
+                      "channel": "email",
+                      "is_internal": false,
+                      "from": [
+                        "customer@example.com"
+                      ],
+                      "to": [
+                        "support@yourcompany.com"
+                      ],
+                      "cc": null,
+                      "bcc": null,
+                      "email_status": "received",
+                      "sent_at": "2025-11-06T17:35:34+00:00",
+                      "created_at": "2025-11-06T17:35:34+00:00",
+                      "updated_at": "2025-11-06T17:35:34+00:00"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Acknowledge receipt"
+          },
+          "2XX": {
+            "description": "Any 2xx response is treated as successful delivery"
+          },
+          "410": {
+            "description": "Permanently deactivate this webhook endpoint"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token",
+        "description": "Workspace API token.\nInclude abilities `external-api:read` and/or `external-api:write`.\n"
+      }
+    },
+    "parameters": {
+      "idPath": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "perPage": {
+        "name": "per_page",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 15
+        }
+      },
+      "page": {
+        "name": "page",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        }
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Validation error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Error message"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true,
+            "example": "UNAUTHENTICATED"
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          }
+        }
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "The given data was invalid."
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "WebhookEnvelope": {
+        "type": "object",
+        "required": [
+          "event",
+          "id",
+          "organization_id",
+          "data"
+        ],
+        "properties": {
+          "event": {
+            "$ref": "#/components/schemas/WebhookEventType"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique webhook delivery identifier"
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Organization UUID that emitted the event"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Event-specific payload. Shape depends on event type."
+          }
+        }
+      },
+      "WebhookEventType": {
+        "type": "string",
+        "enum": [
+          "conversation.created",
+          "conversation.deleted",
+          "conversation.assigned.updated",
+          "conversation.status.updated",
+          "conversation.priority.updated",
+          "conversation.tags.updated",
+          "conversation.customer.message.created",
+          "conversation.user.message.created",
+          "customer.created",
+          "customer.updated",
+          "customer.deleted",
+          "agent.created",
+          "agent.updated",
+          "agent.deleted",
+          "training.created",
+          "training.updated",
+          "training.deleted",
+          "training.agent.assigned"
+        ]
+      },
+      "Agent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "avatar_url": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "max_messages_per_session": {
+            "type": "integer",
+            "nullable": true
+          },
+          "tone": {
+            "type": "string",
+            "nullable": true
+          },
+          "response_length": {
+            "type": "string",
+            "nullable": true
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "is_copilot": {
+            "type": "boolean"
+          },
+          "prohibited_phrases": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "phrase": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "nullable": true
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "escalation_rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "channel": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "rule": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "escalate_to": {
+                  "type": "string",
+                  "format": "uuid",
+                  "nullable": true
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "nullable": true
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time",
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "Company": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "avatar_url": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "first_seen_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "last_seen_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "Conversation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "email",
+              "chat"
+            ]
+          },
+          "customer_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subject": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "closed"
+            ]
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "normal",
+              "high",
+              "urgent"
+            ]
+          },
+          "assignee_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "User or agent UUID to assign. Must belong to the same workspace.\nFor chat, agent assignment is limited to the conversation's original chat agent.\nFor email, agent assignment is limited to the workspace active email agent.\n"
+          },
+          "assignee_type": {
+            "type": "string",
+            "enum": [
+              "user",
+              "agent"
+            ],
+            "nullable": true
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "first_response_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "last_message_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "is_spam": {
+            "type": "boolean"
+          },
+          "spam_score": {
+            "type": "number",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "Customer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "first_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "last_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "locale": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "company_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "avatar_url": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "first_seen_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "last_seen_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "conversation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sender_type": {
+            "type": "string",
+            "enum": [
+              "customer",
+              "user",
+              "agent",
+              "system"
+            ]
+          },
+          "sender_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "customer_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "content": {
+            "type": "string"
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "is_internal": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "from": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "to": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "cc": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "bcc": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "email_status": {
+            "type": "string",
+            "nullable": true
+          },
+          "email_error_message": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "TrainingData": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "url",
+              "file",
+              "video",
+              "qa"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "slug": {
+            "type": "string",
+            "nullable": true
+          },
+          "is_processed": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "processing",
+              "completed",
+              "failed"
+            ],
+            "nullable": true
+          },
+          "training_folder_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "AgentCreateRequest": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "avatar_url": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true,
+            "maxLength": 500
+          },
+          "max_messages_per_session": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000,
+            "nullable": true
+          },
+          "tone": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "response_length": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "is_active": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "AgentUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "avatar_url": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true,
+            "maxLength": 500
+          },
+          "max_messages_per_session": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000,
+            "nullable": true
+          },
+          "tone": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "response_length": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "is_active": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "CompanyCreateRequest": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 50
+          },
+          "domain": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "country": {
+            "type": "string",
+            "nullable": true,
+            "minLength": 2,
+            "maxLength": 2,
+            "pattern": "^[A-Za-z]{2}$"
+          }
+        }
+      },
+      "CompanyUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 50
+          },
+          "domain": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "country": {
+            "type": "string",
+            "nullable": true,
+            "minLength": 2,
+            "maxLength": 2,
+            "pattern": "^[A-Za-z]{2}$"
+          }
+        }
+      },
+      "ConversationCreateRequest": {
+        "type": "object",
+        "required": [
+          "channel",
+          "customer_id"
+        ],
+        "properties": {
+          "channel": {
+            "type": "string",
+            "enum": [
+              "email",
+              "chat"
+            ]
+          },
+          "customer_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subject": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 500
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "closed"
+            ],
+            "nullable": true
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "normal",
+              "high",
+              "urgent"
+            ],
+            "nullable": true
+          },
+          "assignee_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "User or agent UUID to assign. Set null to unassign.\nMust belong to the same workspace.\nFor chat, agent assignment is limited to the conversation's original chat agent.\nFor email, agent assignment is limited to the workspace active email agent.\n"
+          },
+          "assignee_type": {
+            "type": "string",
+            "enum": [
+              "user",
+              "agent"
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "ConversationUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 500
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "closed"
+            ],
+            "nullable": true
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "normal",
+              "high",
+              "urgent"
+            ],
+            "nullable": true
+          },
+          "assignee_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "assignee_type": {
+            "type": "string",
+            "enum": [
+              "user",
+              "agent"
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "CustomerCreateRequest": {
+        "type": "object",
+        "required": [
+          "email"
+        ],
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 100
+          },
+          "last_name": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 100
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 255
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 50
+          },
+          "locale": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 10
+          },
+          "country": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "company_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "CustomerUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 100
+          },
+          "last_name": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 100
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 255
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 50
+          },
+          "locale": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 10
+          },
+          "country": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "company_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "MessageCreateRequest": {
+        "type": "object",
+        "required": [
+          "conversation_id",
+          "sender_type",
+          "content"
+        ],
+        "properties": {
+          "conversation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sender_type": {
+            "type": "string",
+            "enum": [
+              "customer",
+              "user"
+            ]
+          },
+          "sender_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "TrainingDataCreateJsonRequest": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "type",
+              "content"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "text"
+                ]
+              },
+              "content": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string",
+                "nullable": true,
+                "maxLength": 255
+              },
+              "description": {
+                "type": "string",
+                "nullable": true
+              },
+              "agent_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "nullable": true
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "type",
+              "video_url"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "video"
+                ]
+              },
+              "video_url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "title": {
+                "type": "string",
+                "nullable": true,
+                "maxLength": 255
+              },
+              "agent_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "nullable": true
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "type",
+              "question",
+              "answer"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "qa"
+                ]
+              },
+              "question": {
+                "type": "string"
+              },
+              "answer": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string",
+                "nullable": true,
+                "maxLength": 255
+              },
+              "agent_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "nullable": true
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "url"
+                ]
+              }
+            },
+            "description": "URL direct create is not supported (use POST /training-data/url/process)"
+          }
+        ]
+      },
+      "TrainingDataCreateFileRequest": {
+        "type": "object",
+        "required": [
+          "type",
+          "file"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "file"
+            ]
+          },
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "Allowed mimes pdf,doc,docx,txt,md (max 10MB)"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "agent_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
+      "TrainingDataUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "agent_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "PaginatedAgents": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Agent"
+            }
+          },
+          "links": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "PaginatedCompanies": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Company"
+            }
+          },
+          "links": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "PaginatedConversations": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Conversation"
+            }
+          },
+          "links": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "PaginatedCustomers": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Customer"
+            }
+          },
+          "links": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "PaginatedMessages": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "links": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "PaginatedTrainingData": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrainingData"
+            }
+          },
+          "links": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    }
+  }
+}

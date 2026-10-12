@@ -1,0 +1,158 @@
+---
+title: "Train your AI agents"
+description: "Add knowledge to your AI agents using text, websites, files, videos, and Q&A."
+---
+
+Your agents are only as strong as the content you give them. The **Training** workspace is where you add, organize, and maintain the information your agents and **Ask Weav** use to answer customers.
+
+This guide explains each training type in detail, when to use it, and how to avoid common mistakes so your agents respond with more accuracy and confidence.
+
+<Frame>
+  ![Screenshot2026 02 28at7 54 23AM](/images/Screenshot2026-02-28at7.54.23AM.png)
+</Frame>
+
+<Info>
+  Training content can be enabled for specific AI agents and for Ask Weav. If access is turned on, that source can be used to generate answers.
+</Info>
+
+## Before you start
+
+Great training data is clear, current, and specific. If your content is outdated, repetitive, or too broad, your agent may return weaker answers even if it has a lot of data.
+
+A good approach is to start with your highest-impact sources first (website, help center, onboarding docs, top support questions), then add edge cases over time.
+
+## How Training works in Weav
+
+<Frame>
+  ![Screenshot2026 02 28at7 55 35AM](/images/Screenshot2026-02-28at7.55.35AM.png)
+</Frame>
+
+Open **Training** and choose **Add content**. You can add:
+
+- Text
+- Website
+- File
+- Video
+- Q&A
+
+After adding content, Weav processes it in the background. You may see statuses like **Queued**, **Processing**, **Completed**, or **Failed** while indexing runs.
+
+<Tip>
+  If a source fails, you can usually fix the source (for example: inaccessible page, unsupported file, invalid video link) and try again.
+</Tip>
+
+## Training type: Text
+
+Use **Text** when you want to type or copy and paste knowledge directly into Weav, like policy snippets, product explanations, internal playbooks, or approved response guidance.
+
+Text is best for fast updates and short, high-value knowledge that changes often. **Keep each text entry focused on one topic so retrieval stays precise**.
+
+### Best use cases
+
+Use text for content that does not live in a single stable URL or file, or when you need to publish a support update immediately.
+
+### Practical guidance
+
+Write in plain, scannable language with clear headings and short paragraphs. Include exact terms your customers use in real conversations so matching improves.
+
+<Info>
+  Text entries can be meaningful content length and support large bodies of content, so you can store both concise snippets and long-form reference material.
+</Info>
+
+## Training type: Website
+
+Use **Website** to sync content from a website or help center. This is usually the fastest way to train an agent on a large knowledge base.
+
+<Frame>
+  ![Screenshot2026 02 28at7 57 22AM](/images/Screenshot2026-02-28at7.57.22AM.png)
+</Frame>
+
+In Weav, website sync is a two-step flow. First, you enter a top-level URL. Then Weav discovers pages, and you choose which pages to include before syncing.
+
+<Steps>
+  <Step title="Enter your main website URL">
+    Add the top-level URL (for example, your  home page). Weav will discover linked sub-pages.
+  </Step>
+  <Step title="Review discovered pages">
+    Select only the pages that should train your agents. Focus on clean, customer-ready documentation.
+  </Step>
+  <Step title="Start sync">
+    Weav processes selected pages and creates training chunks in the background.
+  </Step>
+</Steps>
+
+### Best use cases
+
+Website sync is ideal for marketing sites, docs portals, help centers, changelog pages, and support knowledge bases that are already organized.
+
+### Practical guidance
+
+Avoid syncing pages with thin content, duplicated content, or temporary announcements.
+
+<Tip>
+  You can enable **automatic re-sync every 30 days** for website sources, and you can also manually trigger a re-sync when you publish important updates.
+</Tip>
+
+<Warning>
+  If a domain is already synced, Weav prevents duplicate website sync for that domain to avoid overlapping sources.
+</Warning>
+
+## Training type: File
+
+Use **File** when you have documentation saved to digital files. Weav extracts the file text and trains from that content.
+
+Supported formats include common support-document formats like PDF, DOCX/DOC, TXT/MD, RTF, and CSV.
+
+### Practical guidance
+
+Prefer clean, text-readable files with clear section structure. Remove noisy exports, scanned image-only docs, and duplicated versions where possible.
+
+<Info>
+  File uploads are size-limited per file. If a document is very large, split it into logical parts (for example: billing-policy-part-1, part-2) for easier maintenance.
+</Info>
+
+## Training type: Video
+
+Use **Video** to train from YouTube content. Weav extracts transcript text and uses it as training data.
+
+This works well for webinar content, onboarding walkthroughs, and recorded product training where the spoken explanation is valuable.
+
+### Practical guidance
+
+Choose videos with clear narration and accurate captions. If possible, pair important videos with a short text summary in a separate Text source so key points are easier to retrieve.
+
+<Warning>
+  Weav supports standard YouTube video URLs. YouTube Shorts are not supported.
+</Warning>
+
+## Training type: Q&A
+
+Use **Q&A** for high-priority, repeat questions where you want precise answer behavior.
+
+Q&A is excellent for FAQ-style intents like pricing rules, account limits, refund policy, SLA details, and compatibility questions. A focused Q&A entry can significantly improve consistency for common asks.
+
+### Practical guidance
+
+Write questions in customer language, not internal jargon. Keep answers direct and policy-safe. If questions are similar but meaningfully different, create separate Q&A entries rather than one broad answer.
+
+## Assigning training data to the right agents
+
+Each training source can be enabled for one or more AI agents and for Ask Weav. This lets you keep knowledge scoped to the agent that needs it.
+
+For example, your billing agent can use billing sources, while your onboarding agent uses setup sources. This reduces irrelevant retrieval and improves answer quality.
+
+## Recommended training strategy
+
+Start with your most trusted, customer-facing documentation first. Then add Q&A for top recurring tickets. Add files and videos where your best knowledge is not yet documented elsewhere.
+
+Review your sources regularly. Remove outdated entries, re-sync changed websites, and keep naming/titles consistent so your team can manage content quickly.
+
+<Tip>
+  A smaller, curated knowledge base almost always performs better than a large, unmaintained one.
+</Tip>
+
+## Troubleshooting quick guide
+
+If answers feel off, first check source quality and source coverage for that topic. Then verify that the source is enabled for the correct agent. For websites, confirm the right pages were selected and re-sync if content changed recently.
+
+If processing fails, check the specific source format or URL quality and retry. Partial website success is still useful: successful pages can still train the agent even if some pages fail.

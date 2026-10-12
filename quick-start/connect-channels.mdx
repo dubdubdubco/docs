@@ -1,0 +1,84 @@
+---
+title: "Connect channels"
+description: "Connect chat and email so your AI agent can start handling real customer conversations."
+---
+
+After your workspace and agent are configured, the final Quick Start step is connecting your channels. In Weav, that means connecting **Chat** (website widget) and **Email** (agent assignment for inbound email handling).
+
+Once both are connected, your agent is ready for live customer interactions.
+
+## Connect chat to your website
+
+To enable chat, open your agent and go to **Settings → Chat → Deploy**. In the **Installation** row, Weav gives you a ready-to-use embed script.
+
+<Frame>
+  ![Screenshot2026 02 28at8 00 14AM](/images/Screenshot2026-02-28at8.00.14AM.png)
+</Frame>
+
+This script loads the Weav widget and initializes it with your agent’s unique slug, so conversations route to the correct agent configuration.
+
+<Steps>
+  <Step title="Copy the install script">
+    In **Deploy → Installation**, copy the full embed snippet using the copy button.
+  </Step>
+  <Step title="Paste it into your website">
+    Add the snippet near the end of your site’s `<body>` tag.
+  </Step>
+  <Step title="Publish your website changes">
+    Deploy your site so the widget script is live for visitors.
+  </Step>
+  <Step title="Verify widget behavior">
+    Open your site, start a test chat, and confirm responses come from the expected agent.
+  </Step>
+</Steps>
+
+<Tip>
+  The script is agent-specific. If you switch to a different agent, copy that agent’s script from its own Chat Deploy section.
+</Tip>
+
+## Configure which agent handles email
+
+To enable email handling, open your agent and go to **Settings → Email → Deploy**, then use **Assignment**.
+
+<Frame>
+  ![Screenshot2026 02 28at8 02 23AM](/images/Screenshot2026-02-28at8.02.23AM.png)
+</Frame>
+
+When you click **Assign to email**, that agent becomes the active email agent for the workspace.
+
+<Info>
+  Only one agent can be assigned to email at a time. Assigning a new agent automatically replaces the previously assigned email agent.
+</Info>
+
+### What assignment changes in practice
+
+For new inbound email conversations, Weav links the conversation to the active email agent so email drafting and response automation can run.
+
+If the conversation is unassigned, Weav can also assign it to that agent automatically (based on eligibility checks). This is what powers the “agent handles email” workflow.
+
+If a conversation already has an agent attached, assignment is not forcibly overwritten on that existing thread. Reassignment mainly affects new or eligible conversations moving forward.
+
+## Pair assignment with your email behavior settings
+
+Right below Assignment, configure the behavior that determines how aggressively the agent responds:
+
+- **Auto-send threshold** controls whether the agent auto-sends high-confidence replies or creates drafts for human review.
+- **Escalation assignee** sets who receives conversations when escalation is needed.
+- **Escalation rules** let you define conditions for escalating to a teammate.
+
+## Recommended go-live checklist
+
+Before going live, validate both channels end-to-end:
+
+1. Chat widget appears on your website and sends/receives messages correctly.
+2. A new inbound email conversation is linked to the assigned email agent.
+3. Draft/auto-send behavior matches your selected threshold.
+4. Escalation routes to the correct teammate.
+
+<Warning>
+  If email isn’t connected at the workspace level yet, complete [setting up custom email](https://docs.weav.com/inbox/forward-emails-to-weav) first, then return to agent assignment.
+</Warning>
+
+## You’re ready for live interactions
+
+When chat is embedded and an email agent is assigned, your workspace is fully connected for live customer conversations across both channels.

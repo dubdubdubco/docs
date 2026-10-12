@@ -1,0 +1,92 @@
+---
+title: "Prohibited Phrases"
+description: "Control what your AI agent never says by listing phrases it must avoid in every response."
+---
+
+## What are prohibited phrases?
+
+Prohibited phrases are words or short phrases you tell your Weav agent **never to use** in its replies. When the agent generates an answer (in chat, email, or the playground), its system instructions include your list and tell the model: “Never use the following phrases in your responses.” That keeps the agent from saying things that are off-brand, dismissive, or risky—like “That’s our policy,” “As I already told you,” or competitor names.
+
+Prohibited phrases apply to **all** channels and flows that use that agent: chat widget, email drafts, playground, and any API-driven generation. There is one list per agent; you manage it in the dashboard and it’s saved with the agent.
+
+---
+
+## How prohibited phrases are used
+
+1. **Where they go**: When the agent builds its system prompt (the instructions that define how it should answer), your prohibited phrases are appended as a block like:
+   - “**Prohibited Phrases:** Never use the following phrases in your responses:” followed by each phrase on its own line.
+2. **When they apply**: That full system prompt (including the prohibited list) is sent to the model for every reply. The model is not asked to “detect” or “classify” phrases; it is instructed up front to avoid them while generating.
+3. **Refinement**: If a response is later refined (e.g. “make it shorter”), the refinement instructions also tell the model to keep adhering to tone, length, and **prohibited phrases**, so revised answers stay within the same guardrails.
+
+So the feature is **prompt-based**: the AI sees “never use these” in its system instructions and is expected to avoid them in its own wording. It works best when phrases are concrete and easy to recognize.
+
+---
+
+## Where to configure prohibited phrases
+
+In the Weav dashboard: open your **Agent** → **Guidance** section → **Prohibited phrases** → **Manage**. You can add as many phrases as you need, one per line. Save when done; the list is applied the next time the agent generates or refines a response.
+
+---
+
+## Good examples of prohibited phrases
+
+These are specific, easy for the model to avoid, and address real tone or policy concerns:
+
+| Phrase                         | Why it works well                                                                 |
+| ------------------------------ | --------------------------------------------------------------------------------- |
+| As I already told you          | Dismissive; agents should re-explain or clarify instead.                          |
+| That's our policy              | Often sounds rigid; better to explain the reason in your own words.               |
+| I'm not sure                   | Undermines trust; the agent can say “Let me find out” or offer a clear next step. |
+| [Competitor name]              | Keeps the agent from recommending or mentioning competitors.                      |
+| You're wrong                   | Confrontational; the agent can correct gently without this wording.               |
+| Sorry, we can't help with that | Sounds like a dead end; better to offer alternatives or escalation.               |
+| No problem                     | Fine to prohibit if you prefer “You’re welcome” or similar.                       |
+| Just contact support           | Vague; better to give a concrete action (e.g. “Contact support at X”).            |
+
+Short, exact phrases and common variants (e.g. “That’s our policy” / “It’s our policy”) are best added as separate lines if you care about both.
+
+---
+
+## Examples to avoid
+
+These are harder to enforce or less useful:
+
+| Phrase or approach                                         | Why to avoid                                                                                                                                                       |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Very long sentences (e.g. a full paragraph)                | The model may need to say the same idea in different words; a long “phrase” is hard to avoid without changing meaning.                                             |
+| Single common words like “the” or “and”                    | Would block normal grammar and hurt readability.                                                                                                                   |
+| Anything negative / anything that might upset the customer | Too vague; the model can’t reliably apply it. Prefer specific phrases.                                                                                             |
+| Slang or idioms that have many variants                    | If you only list one form, the model might use a synonym. List the main variants you care about.                                                                   |
+| Phrases that are essential to your answers                 | If you must sometimes say “We’re closed on Sundays,” don’t prohibit “We’re closed”; prohibit only the exact wording you never want (e.g. “We’re closed, period.”). |
+
+---
+
+## Tips for writing prohibited phrases
+
+1. **Use exact wording**\
+   Add the precise phrase you want to avoid (e.g. “That’s our policy”), not a description (“anything about policy”).
+2. **Keep entries short**\
+   A few words or one short sentence per line works best. Long sentences are hard for the model to avoid without paraphrasing in ways you might not want.
+3. **Add variants if needed**\
+   If you want to block “I don’t know” and “I'm not sure,” add both. The model follows the list literally.
+4. **Focus on tone and risk**\
+   Prioritize phrases that sound dismissive, confrontational, off-brand, or that mention competitors or sensitive topics.
+5. **Review after incidents**\
+   If the agent says something you don’t want again, add that exact phrase (or a shortened form) to the list and save.
+
+---
+
+## What prohibited phrases don’t do
+
+- **They don’t block the customer.** Prohibited phrases only restrict what the **agent** says. Customer messages are not filtered by this list.
+- **They don’t guarantee 100% avoidance.** The model is instructed not to use the phrases; it usually complies, but slips can happen. **Making it more specific can help.**
+- **They don’t replace escalation.** If you want certain topics to go to a human, use **escalation rules**. Prohibited phrases only control wording.
+
+---
+
+## Summary
+
+- **Prohibited phrases** = a list of words/phrases the agent must never use in its replies.
+- They are added to the **system prompt** and apply to chat, email, playground, and refinement.
+- Use **short, exact phrases** and add **variants** you care about; avoid long sentences and vague rules.
+- Configure them under **Agent → Guidance → Prohibited phrases** in the Weav dashboard.

@@ -1,0 +1,188 @@
+---
+title: "General settings"
+description: "Learn what each setting does in the agent Settings tab, with practical guidance for tone, response length, prohibited phrases, and context."
+---
+
+<Note>
+  This page is different from the **Chat** and **Email** tabs.\
+  The settings below affect the agent’s core identity and response behavior.
+</Note>
+
+---
+
+## General settings
+
+### Name
+
+Your internal display name for this agent.
+
+- Shows in the Agents sidebar and settings screens
+- Helps teammates identify the right agent quickly
+
+**Best practices**
+
+- Use role-based names (`Support Assistant`, `Billing Assistant`)
+- Avoid ambiguous names (`Agent 1`, `Test Bot`)
+
+---
+
+### Avatar
+
+Profile image used for this agent in UI previews and agent lists.
+
+- Purely visual/identity
+- Does not change model behavior
+
+**Best practices**
+
+- Use a clear, brand-aligned icon
+- Keep style consistent across all agents in a workspace
+
+---
+
+### ID
+
+Read-only unique ID for the agent, with copy-to-clipboard.
+
+- Useful for support/debugging
+- Safe to share internally when referencing a specific agent config
+
+---
+
+## Guidance settings (behavior controls)
+
+These are the most important controls for output quality.
+
+### Tone
+
+Controls _how_ the agent says things.
+
+Available options:
+
+- `Warm`
+- `Neutral`
+- `Professional`
+- `Direct`
+- `Witty`
+
+#### When to use each tone
+
+| Tone         | Best for                                   | Watch out for                         |
+| ------------ | ------------------------------------------ | ------------------------------------- |
+| Warm         | Customer support, high-empathy moments     | Can become verbose or too casual      |
+| Neutral      | Mixed workloads, general support           | Can feel generic if overused          |
+| Professional | B2B, compliance-heavy, formal comms        | Can sound rigid if over-formal        |
+| Direct       | High-volume queues, urgent troubleshooting | Can sound abrupt if not softened      |
+| Witty        | Brand voice with personality               | Can sound flippant in sensitive cases |
+
+#### Tone best practices
+
+- Choose one tone per agent and keep it stable
+- Match tone to audience (B2B vs consumer)
+- If you use Witty, add clear prohibited phrases and context guardrails
+
+---
+
+### **Response length**
+
+Controls _how much detail_ the agent gives.
+
+Available options:
+
+- Short
+- Standard
+- Long
+
+#### How to choose
+
+| Length   | Best for                                       | Risk                     |
+| -------- | ---------------------------------------------- | ------------------------ |
+| Short    | High-volume support, quick confirmations       | May omit required detail |
+| Standard | Most support teams (default recommendation)    | Low risk                 |
+| Long     | Complex technical issues, policy-heavy answers | Can overwhelm customers  |
+
+---
+
+### **Prohibited phrases**
+
+A managed list of words/phrases the agent should avoid using when generating responses.
+
+Examples:
+
+- “That’s our policy”
+- “I can’t help with that”
+- “As an AI language model”
+
+#### How it works
+
+- You maintain the list by clicking **Manage**
+- The system instructs the model to never use these phrases
+
+<Warning>
+  For strict compliance needs, include phrase variants and continuously review responses.
+</Warning>
+
+---
+
+### **Context**
+
+Business context that helps the agent understand your business.
+
+<Tip>
+  Think of this as important knowledge that you want your agent to know about your business.
+</Tip>
+
+#### What to include
+
+- Product/service scope
+- Support boundaries (what you do and don’t support)
+- Contact and escalation paths
+- Key policies (refunds, SLAs, shipping windows)
+- Canonical links or docs to trust
+
+#### What not to include
+
+- Secrets (API keys, passwords, private credentials)
+- Time-sensitive data likely to go stale quickly
+- Ambiguous or conflicting policy text
+
+#### Good context example
+
+> Weav is a B2B customer support platform for SMB teams.
+>
+> Support hours: Mon–Fri, 9am–6pm ET.
+>
+> Refund policy: monthly plans can be refunded within 14 days of first payment.
+>
+> For billing disputes, route customers to [billing@weav.com](mailto:billing@weav.com) and ask for invoice ID.
+>
+> Do not provide legal advice or respond to questions unrelated to Weav. For security requests, escalate to [security@weav.com](mailto:security@weav.com).
+
+#### Bad context example
+
+> We are the best support company. Be helpful and nice. We do many things.
+
+#### Context best practices
+
+- Write for decisions, not marketing
+- Use short bullets and explicit rules
+- Update when policy/process changes
+- Add examples of edge cases your team sees often
+
+---
+
+## **How these settings work together**
+
+At generation time, the agent is guided by:
+
+1. Base system prompt
+2. Your **Context**
+3. Your **Response length**
+4. Your **Tone**
+5. Your **Prohibited phrases**
+
+This means all four guidance settings are cumulative.
+
+<Warning>
+  A weak or vague context can still reduce quality even if tone and length are configured well.
+</Warning>

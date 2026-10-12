@@ -1,0 +1,164 @@
+---
+title: "Overview"
+description: "A high-level guide to the settings available in Weav and what you can control from each page."
+---
+
+## Introduction
+
+Weav settings are where you manage your **personal profile**, your **workspace**, and **developer** tools like API keys and webhooks. Opening **Settings** from the app menu takes you to a dedicated settings area with a sidebar. The sidebar is grouped into **Personal**, **Workspace**, and **Developers**. What you see can depend on your role—for example, some workspace options are only available to workspace admins.
+
+---
+
+## Personal
+
+Settings that apply only to you: profile, email, and notifications.
+
+### Details
+
+**Path:** Settings → Personal → **Details**
+
+- **Name** – Your display name in Weav.
+- **Email** – Sign-in and account email; change is done through a verification flow.
+- **Signature** – Optional email signature used when you reply to conversations.
+- **Timezone** – Your timezone for dates and times in the app.
+- **Locale** – Your preferred language/locale.
+- **Appearance** – Theme (e.g. light/dark) if your workspace supports it.
+
+### Notifications
+
+**Path:** Settings → Personal → **Notifications**
+
+- **Per-event toggles** – For each event type (e.g. new conversation, assignment, mention), you can turn on or off:
+  - **Email** – Receive an email when the event happens.
+  - **Push** – Receive a browser push notification (if supported and allowed).
+- **Push setup** – Enable or disable browser push and manage permission.
+
+---
+
+## Workspace
+
+Settings that affect the whole organization. **General and Billing** is admin-only; the rest are available based on your permissions.
+
+### General
+
+**Path:** Settings → Workspace → **General**<br />**Required role:** Admin
+
+- **Workspace name** – Organization/workspace name.
+- **Locale** – Default language/locale for the workspace.
+- **Timezone** – Default timezone for the workspace.
+- **Workspace icon** – Logo or icon for the organization.
+- **Delete workspace** – Option to permanently delete the workspace and its data.
+
+### Email
+
+**Path:** Settings → Workspace → **Email**
+
+- **Addresses** – Add, edit, and remove **email addresses** used for support. For each address you can:
+  - Configure **inbound** (receiving) and **outbound** (sending).
+  - Attach **domains** and see verification status (e.g. DKIM, return path).
+  - Run **forwarding tests** to confirm inbound setup.
+- **Preferences** (tab) – Defaults and behavior for email in the inbox:
+  - **Inbox address** – Your Weav inbound address (e.g. for forwarding); copy to use in your mail provider.
+  - **Default status** – Open vs resolved after sending a reply.
+  - **Default assignee**, **Default from name** – Optional defaults for new conversations or sent emails.
+  - **Auto BCC** – Comma-separated addresses that receive a copy of every outbound email.
+  - **Trusted domains** – Domains whose messages skip spam checks.
+  - **Ignored addresses** – Addresses that are not used to create or update conversations.
+
+### Teammates
+
+**Path:** Settings → Workspace → **Teammates**
+
+- **List of members** – See everyone in the workspace, with role and status.
+- **Invite** – Send invites by email; manage pending invites (resend, revoke).
+- **Roles** – Change a member’s role (e.g. admin, member).
+- **Remove** – Remove a member from the workspace.
+
+### Views
+
+**Path:** Settings → Workspace → **Views**
+
+- **Custom inbox views** – Saved filter/sort configurations for the inbox.
+- **Private vs shared** – Views can be private (only you) or shared with the workspace.
+- **Pin** – Pin views so they appear in the inbox sidebar.
+- **Edit / duplicate / delete** – Change filters, copy a view, or remove it. Creating or editing a view can take you to the inbox with the view builder.
+
+### Tags
+
+**Path:** Settings → Workspace → **Tags**
+
+- **Create tags** – Add tags (name and optional icon) for conversations.
+- **Edit / delete** – Change name or icon, or remove a tag.
+- **Usage** – See how many conversations use each tag; optionally open the inbox filtered by that tag.
+
+### Segments
+
+**Path:** Settings → Workspace → **Segments**
+
+- **Customer segments** – Saved filter/sort configurations for the **Customers** (people) list.
+- **Private vs shared** – Segments can be private or shared.
+- **Pin** – Pin segments for quick access in the customers area.
+- **Edit / duplicate / delete** – Change filters, copy, or remove. Creating a segment can take you to the customers page with the segment builder.
+
+Use this to manage saved customer lists (e.g. “High value”, “Needs follow-up”).
+
+### Billing
+
+**Path:** Settings → Workspace → **Billing**<br />**Required role:** Admin
+
+Billing is split into tabs:
+
+- **Current period** – Usage and summary for the current billing period.
+- **Subscription** – Plan, add-ons, and subscription status.
+- **Limits** – Configure and limit your AI resolutions.
+- **Invoices** – View and download past invoices.
+- **Payment details** – Update payment method (e.g. card) used for billing.
+
+Use this to monitor usage, change plan, and manage payments.
+
+### Import
+
+**Path:** Settings → Workspace → **Import**
+
+- **Integrations** – List of supported import sources.
+- **Start import** – For an available integration, open the flow to import data (e.g. chatbots, customers, messages, training data).
+
+Use this when migrating from another tool into Weav.
+
+---
+
+## Developers
+
+Settings for integrating Weav with other systems.
+
+### API keys
+
+**Path:** Settings → Developers → **API** (shown in UI as “API keys”)
+
+- **Create API key** – Generate a new token with a name and optional expiry.
+- **View / copy** – See and copy the secret when first created (it’s not shown again).
+- **Revoke** – Delete a token so it can no longer be used.
+
+Use these keys to authenticate API requests (e.g. from scripts, integrations, or your own app).
+
+Learn more about the available API's in the [Weav developer center](https://docs.weav.com/api-reference/introduction)
+
+### Webhooks
+
+**Path:** Settings → Developers → **Webhooks**
+
+- **Configuration** – Add webhook endpoints (URL, optional secret), choose which **events** to send (e.g. conversation created, message received), and enable/disable each endpoint.
+- **Delivery logs** – List of recent deliveries per webhook: status, payload, and errors for debugging.
+
+Use this to push real-time events from Weav to your servers or third-party services.
+
+Learn more about the [Weav webhooks](https://docs.weav.com/api-reference/webhooks/webhook-delivery)
+
+### MCP connections
+
+**Path:** Settings → Developers → **MCP connections** **Required role:** Admin or owner
+
+- **Connected clients** – See AI tools that have been granted access to this workspace through the Weav MCP server.
+- **Disconnect** – Revoke a client so it can no longer read or change workspace data.
+
+Use this after connecting an MCP client. Learn more in the [MCP guide](/api-reference/mcp).

@@ -1,0 +1,118 @@
+---
+title: "Add DNS records at your domain provider"
+sidebarTitle: "DNS settings"
+description: "Configure the DKIM and Return Path DNS records at Cloudflare, GoDaddy, Namecheap, or Squarespace so you can send email from your custom domain in Weav."
+---
+
+## Overview
+
+To send email from your own domain (e.g. [support@yourdomain.com](mailto:support@yourdomain.com)) through Weav, you must add **two DNS records** at the place where your domain’s DNS is managed. Weav will show you the exact values when you set up outbound messaging for a domain.
+
+**The two records Weav uses:**
+
+1. **DKIM (TXT record)** – Proves that messages sent from Weav are authorized for your domain. This supports DKIM alignment for DMARC so your emails are more likely to reach the inbox.
+2. **Return Path (CNAME record)** – Sets the return-path domain used when Weav sends mail for you. This supports SPF alignment for DMARC.
+
+You add these in your **domain provider’s DNS settings** (e.g. Cloudflare, GoDaddy, Namecheap, Squarespace), then return to Weav and click **Verify** so Weav can confirm they’re correct.
+
+**Where to get the values in Weav:**\
+Go to **Settings → Email**, add or select the domain you’re verifying, and open **Setup outbound messaging**. You’ll see:
+
+- **DKIM (TXT):** a **Key** (host name) and **Value** (TXT content)
+- **Return Path (CNAME):** a **Key** (host name) and **Value** (target the CNAME points to)
+
+Copy the **Key** and **Value** from Weav into your provider’s DNS screens as described below. Use the exact values shown in Weav; do not substitute example.com or other placeholders.
+
+**Note:** Some DNS providers want the **full host name** (e.g. `pm._domainkey.yourdomain.com`) in the “Name” or “Host” field, while others want only the **subdomain part** (e.g. `pm._domainkey`). If a provider’s docs say to use the full domain, enter the Weav host as a full name (e.g. `pm._domainkey.yourdomain.com`). Check your provider’s documentation for their rules.
+
+---
+
+## Cloudflare
+
+1. Log in at [https://dash.cloudflare.com/login](https://dash.cloudflare.com/login) with your Cloudflare account.
+2. On the homepage, select the **domain** you want to authenticate from the domains table.
+3. In the left sidebar go to **DNS** → **Records**.
+4. **Add the DKIM TXT record:**
+   - Click **Add record** and choose type **TXT**.
+   - In **Name**, enter the DKIM host from Weav (e.g. `pm._domainkey` or the full name if your provider requires it).
+   - In **Content**, paste the DKIM **Value** from Weav.
+   - Set **TTL** to **Auto** (or 3600 if Auto is not available). Save the record.
+5. **Add the Return Path CNAME record:**
+   - Click **Add record** and choose type **CNAME**.
+   - In **Name**, enter the Return Path host from Weav.
+   - In **Target**, paste the Return Path **Value** from Weav.
+   - Set **Proxy status** to **DNS only** (grey cloud). Do not proxy CNAME records used for email.
+   - Set **TTL** to **Auto**. Save the record.
+6. Return to Weav, open the outbound setup for that domain, and click **Verify**.
+
+**If verification fails in Weav:**
+
+- Ensure the CNAME is **DNS only**, not **Proxied** (orange cloud).
+- Ensure **CNAME flattening** is not applied to this CNAME (use DNS only so the record is a normal CNAME).
+
+See [Cloudflare’s guide to DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) for more detail.
+
+---
+
+## Squarespace
+
+1. Log in at [https://login.squarespace.com/](https://login.squarespace.com/) with your Squarespace account.
+2. Click **Domains** (next to the Dashboard tab) and select the **domain** you want to authenticate.
+3. In the left-hand menu select **DNS**.
+4. Scroll to the **Custom records** section and add the records: **DKIM (TXT):**
+   - Click **Add record** and choose type **TXT**.
+   - In **Host**, enter the DKIM host from Weav.
+   - In **Text data** (or **Value**), paste the DKIM **Value** from Weav. Save the record. **Return Path (CNAME):**
+   - Click **Add record** and choose type **CNAME**.
+   - In **Host**, enter the Return Path host from Weav.
+   - In **Alias data** (or **Target**), paste the Return Path **Value** from Weav. Save the record.
+5. Return to Weav and click **Verify** for that domain.
+
+---
+
+## GoDaddy
+
+1. Log in at [https://sso.godaddy.com/](https://sso.godaddy.com/) with your GoDaddy account.
+2. In the left menu go to **Domain**, then click **Manage DNS** for the domain you want to authenticate.
+3. **Add the DKIM TXT record:**
+   - Click **Add new record** and choose type **TXT**.
+   - In **Name**, enter the DKIM host from Weav.
+   - In **Value**, paste the DKIM **Value** from Weav.
+   - Set **TTL** if required (e.g. ½ hour or 3600). Save the record.
+4. **Add the Return Path CNAME record:**
+   - Click **Add new record** and choose type **CNAME**.
+   - In **Name**, enter the Return Path host from Weav.
+   - In **Value** (or **Points to**), paste the Return Path **Value** from Weav.
+   - Set **TTL** if required (e.g. ½ hour). Save the record.
+5. Return to Weav and click **Verify** for that domain.
+
+See [GoDaddy’s guide to managing DNS records](https://www.godaddy.com/help/add-a-cname-record-19236) for more detail.
+
+---
+
+## Namecheap
+
+1. Log in at [https://www.namecheap.com/myaccount/login/](https://www.namecheap.com/myaccount/login/) with your Namecheap account.
+2. Go to **Domain list** in the left menu, then click **Manage** for the domain you want to authenticate.
+3. Open **Advanced DNS** and in the **Host Records** section click **Add New Record**.
+4. **Add the DKIM TXT record:**
+   - Choose **TXT Record**.
+   - In **Host** (or **Name**), enter the DKIM host from Weav.
+   - In **Value**, paste the DKIM **Value** from Weav.
+   - Set **TTL** to **Automatic** (or 3600). Save the record.
+5. **Add the Return Path CNAME record:**
+   - Click **Add New Record** and choose **CNAME Record**.
+   - In **Host**, enter the Return Path host from Weav.
+   - In **Target**, paste the Return Path **Value** from Weav.
+   - Set **TTL** to **Automatic**. Save the record.
+6. Return to Weav and click **Verify** for that domain.
+
+See [Namecheap’s guide to host records](https://www.namecheap.com/support/knowledgebase/article.aspx/319/2237/how-can-i-set-up-an-a-address-record-for-my-domain/) for general DNS guidance.
+
+---
+
+## After adding the records
+
+- **Propagation:** DNS changes can take from a few minutes up to 24–48 hours. If **Verify** in Weav fails at first, wait a bit and try again.
+- **Verify in Weav:** In **Settings → Email**, open the outbound setup or DNS view for the domain and click **Verify**. Weav checks the records; when both DKIM and Return Path are correct, the domain is marked verified and you can send from that domain in Weav.
+- **Typo check:** Ensure there are no extra spaces or missing parts in the **Name**/Host and **Value**/Target you pasted. Some providers add the domain automatically to the host—if so, enter only the part Weav shows (e.g. `pm._domainkey`) unless the provider’s docs say otherwise.

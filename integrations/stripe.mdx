@@ -1,0 +1,302 @@
+---
+title: "Stripe"
+description: "Learn how to connect Stripe with your Weav AI Agents"
+---
+
+<Frame>
+  ![Stripe integration for AI agents](/images/Screenshot-2026-04-26-at-10.53.37-AM.png)
+</Frame>
+
+The Stripe integration lets your Weav agents use approved Stripe tools during customer conversations.
+
+Use it when customers ask about billing, subscriptions, invoices, payment settings, or account details stored in Stripe. After Stripe is connected, you can choose which agents can use Stripe and which tools each agent can access.
+
+<Note>
+  Stripe tools require customer verification before they run in customer conversations. This helps protect billing and account data.
+</Note>
+
+---
+
+## When to use the Stripe integration
+
+Use Stripe when your agents need to help customers with billing questions or subscription workflows.
+
+Good use cases include:
+
+- Looking up a customer in Stripe
+- Checking subscription status
+- Finding recent invoices
+- Sharing a secure billing portal link
+- Helping a customer update billing details
+- Canceling or updating a subscription after confirmation
+
+Stripe works best for agents that handle billing, subscriptions, account management, or customer support.
+
+---
+
+## Before you start
+
+You will need:
+
+- Admin access in Weav
+- Permission to connect your Stripe account
+- A clear policy for what agents are allowed to do with billing data
+
+Best practices before connecting:
+
+- Decide which agents should have Stripe access
+- Start with read-only tools before enabling update or cancellation tools
+- Add billing rules to your agent Context
+
+---
+
+## Connect Stripe
+
+Path: Settings -\> Integrations -\> Stripe
+
+1. Open Settings.
+2. Go to Integrations.
+3. Select Stripe.
+4. Click Connect.
+5. Complete the Stripe authorization flow.
+6. Return to Weav.
+
+After Stripe is connected, the integration will show as Connected.
+
+---
+
+## Give agents access
+
+<Frame>
+  ![Stripe integration for AI agent tools](/images/Screenshot-2026-04-26-at-10.54.31-AM.png)
+</Frame>
+
+Stripe tools are not automatically available to every agent. You choose which agents can use them.
+
+1. Open Settings -\> Integrations.
+2. Select Stripe.
+3. Click Manage access.
+4. Choose the agents that should use Stripe.
+5. Grant access to all Stripe tools or select specific tools.
+6. Click Save changes.
+
+### Allow all tools
+
+Use Allow all tools when an agent should have access to every current and future Stripe tool.
+
+This is useful for a dedicated billing agent.
+
+### Select specific tools
+
+Use specific tool access when an agent should only handle certain workflows.
+
+Examples:
+
+- A general support agent can search customers and retrieve invoices.
+- A billing agent can retrieve and update subscriptions.
+- A retention agent can create billing portal sessions and cancel subscriptions.
+
+<Tip>
+  For most teams, start with specific tool access. Add more tools once you are confident the agent is following your billing policies.
+</Tip>
+
+---
+
+## Supported Stripe tools
+
+The Stripe integration currently supports the following agent tools.
+
+| Tool | What it does | Best for |
+| --- | --- | --- |
+| Search Stripe customers | Searches Stripe customers using Stripe search query syntax. | Finding the right customer record by email, name, metadata, or creation date. |
+| Retrieve customer | Retrieves details for a specific Stripe customer ID. | Confirming customer details before answering account or billing questions. |
+| Update Customer | Updates an existing Stripe customer. | Updating email, name, phone, address, tax status, metadata, invoice settings, or payment method references. |
+| List subscriptions | Lists subscriptions with optional filters like customer, status, price, date range, or collection method. | Finding a customer's active, canceled, or past subscriptions. |
+| Retrieve subscription | Retrieves one subscription by subscription ID. | Checking plan, status, renewal dates, billing method, or subscription details. |
+| Update Subscription | Updates an existing non-canceled subscription. | Changing subscription items, quantity, price, payment behavior, proration behavior, metadata, or cancellation-at-period-end. |
+| Cancel subscription | Cancels an active subscription at the end of the current billing period. | Handling confirmed cancellation requests. |
+| List Invoices | Lists invoices with optional filters like customer, subscription, status, date range, or collection method. | Finding recent invoices or checking whether invoices are open, paid, void, or uncollectible. |
+| Retrieve Invoice | Retrieves one invoice by invoice ID. | Answering detailed invoice questions. |
+| Create Billing Portal Session | Creates a secure Stripe billing portal URL. | Sending customers to Stripe to manage subscriptions, invoices, or payment methods themselves. |
+
+---
+
+## How agents use Stripe tools
+
+Agents decide when to use Stripe based on the customer's request, the tools they have access to, and the guidance you provide in the agent's settings.
+
+At generation time, the agent can:
+
+1. Identify that the customer is asking about billing or subscriptions.
+2. Ask for any required information, such as an email address, customer ID, subscription ID, or invoice ID.
+3. Trigger customer verification when required.
+4. Call the appropriate Stripe tool.
+5. Use the result to answer the customer.
+
+For example, if a customer asks, "Can you check whether my last invoice was paid?", the agent will request the customer to verify their email and then it search for the customer, list invoices for that customer, then explain the invoice status.
+
+---
+
+## Customer verification
+
+All supported Stripe tools require verification in customer conversations.
+
+When a Stripe tool is needed, Weav asks the customer to verify by email before the action runs. After verification succeeds, the agent can continue with the Stripe request.
+
+Use verification for Stripe because the tools can access sensitive billing data, including:
+
+- Customer records
+- Invoices
+- Subscription details
+- Payment-related settings
+- Account and billing updates
+
+<Note>
+  Verification protects customer data, but it does not replace your internal billing policies. Add clear instructions to your agent about what it should and should not do.
+</Note>
+
+---
+
+## Read-only vs update tools
+
+Stripe tools fall into two practical groups.
+
+### Read-only tools
+
+Read-only tools look up information without changing Stripe data.
+
+Read-only tools include:
+
+- Search Stripe customers
+- Retrieve customer
+- List subscriptions
+- Retrieve subscription
+- List Invoices
+- Retrieve Invoice
+- Create Billing Portal Session
+
+Use these first when setting up a new Stripe-enabled agent.
+
+### Update tools
+
+Update tools can change Stripe data or start a billing workflow.
+
+Update tools include:
+
+- Update Customer
+- Update Subscription
+- Cancel subscription
+
+For update tools, the agent should summarize what will change and ask the customer to confirm before continuing.
+
+<Warning>
+  Only give update tools to agents that have clear billing instructions and are allowed to make account changes.
+</Warning>
+
+---
+
+## Example: Send a billing portal link
+
+A customer asks:
+
+> Can I update my payment method?
+
+The agent can:
+
+1. Search for the Stripe customer.
+2. Verify the customer.
+3. Create a Billing Portal Session.
+4. Send the secure Stripe portal URL to the customer.
+
+This is often safer than updating billing details directly because the customer completes the change inside Stripe themselves.
+
+---
+
+## Example: Check subscription status
+
+A customer asks:
+
+> Is my subscription still active?
+
+The agent can:
+
+1. Search for the Stripe customer by email.
+2. List subscriptions for that customer.
+3. Retrieve the relevant subscription if more detail is needed.
+4. Explain the subscription status and renewal date.
+
+Good response:
+
+> Your subscription is active and renews on May 15. Your current plan is Pro Monthly.
+
+---
+
+## Best practices
+
+### Start with lookup tools
+
+Begin with tools that search, retrieve, and list Stripe records. Add update tools later once your team is confident in the agent's behavior.
+
+### Prefer the billing portal for customer-managed changes
+
+For payment methods, invoice downloads, and some subscription changes, the billing portal is often the safest option.
+
+### Keep billing policies in Context
+
+Tell the agent what it can do, what it should escalate, and when it must ask for confirmation.
+
+Include rules for:
+
+- Refund requests
+- Subscription changes
+- Cancellation offers
+- Plan upgrades or downgrades
+- Account ownership questions
+- Failed payments or disputes
+
+### Limit access by agent role
+
+Not every agent needs every Stripe tool. Give each agent the minimum access it needs for its job.
+
+### Review sensitive workflows
+
+Be extra careful with tools that update customers, update subscriptions, or cancel subscriptions.
+
+---
+
+## Troubleshooting
+
+### Stripe is not available to an agent
+
+Check that:
+
+- Stripe is connected
+- The agent is active
+- The agent has access to Stripe tools
+- The specific tool is enabled for that agent
+
+### The agent cannot complete a Stripe request
+
+Check that:
+
+- The customer completed verification
+- The agent has the required Stripe tool
+- The customer provided enough information
+- The Stripe customer, subscription, or invoice ID exists
+- Your Stripe account allows the requested action
+
+### The agent is using the wrong Stripe tool
+
+Update the agent Context.
+
+Add clear instructions for when to use each tool. For example, tell the agent to use the billing portal for payment method updates, and to use invoice tools only for invoice questions.
+
+### The agent should not make billing changes
+
+Remove access to update tools:
+
+- Update Customer
+- Update Subscription
+- Cancel subscription
+
+Keep read-only tools enabled so the agent can still answer billing questions without changing Stripe data.

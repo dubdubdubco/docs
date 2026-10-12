@@ -1,0 +1,82 @@
+---
+title: "Playground"
+description: "Test your AI agent’s real response behavior safely."
+---
+
+## What the Agent Playground is
+
+The **Agent Playground** is a built-in testing panel on the agent settings page that lets you ask your agent questions and see how it responds in real time.
+
+It's main purpose is to **validate agent behavior before you deploy it to your customers**.
+
+---
+
+## Why teams use the Playground
+
+Playground helps you:
+
+- Test answers without embedding the chat on your site or sending emails
+- Validate training data quality before launch
+- Check if tone, response length, and prohibited phrases are properly configured
+- Confirm escalation behavior in a safe environment
+- Catch weak or hallucinated answers early
+
+<Info>
+  Think of Playground as your “staging environment” for agent quality.
+</Info>
+
+---
+
+## What is different from production
+
+Playground is **safe and non-production**. It does **not** behave exactly like a live customer conversation in every way.
+
+### Not saved to inbox
+
+Conversations in Playground are **not** written to your inbox as customer conversations.
+
+### No customer-facing side effects
+
+Playground tests do not send real customer emails or create live chat messages.
+
+### Session is temporary
+
+Your test thread exists in the sidebar session and can be reset using the refresh control or refreshing your browser.
+
+---
+
+## Best ways to use the Playground
+
+### 1) Smoke test before publishing changes
+
+After updating instructions, context, training, or prohibited phrases:
+
+- Ask 5–10 representative customer questions
+- Confirm answers are accurate and on-brand
+- Verify sources look relevant
+
+### 2) Test edge cases
+
+Try hard prompts such as:
+
+- Ambiguous questions
+- Policy exceptions
+- Escalation-sensitive requests
+- Out-of-scope questions
+
+### 3) Run “before vs after” checks
+
+Use the same test prompts before and after major changes to see whether quality improved.
+
+### 4) Verify source quality
+
+If response sources look weak or unrelated, improve your training data before deployment.
+
+---
+
+## Tips for non-technical users
+
+- Start with your top 10 real customer questions
+- Keep a reusable prompt set so testing is consistent
+- If output quality drops, review training data first
+- Save settings before testing if you see an “unsaved changes” notice (so preview reflects latest config)

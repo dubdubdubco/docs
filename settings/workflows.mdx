@@ -1,0 +1,183 @@
+---
+title: "Customer support workflows"
+sidebarTitle: "Workflows"
+description: "Automate common support steps so customers get faster responses and conversations reach the right place."
+---
+
+<Frame>
+  ![Customer support workflows](/images/Screenshot-2026-04-26-at-11.27.40-AM.png)
+</Frame>
+
+Use workflows when the same thing should happen every time a conversation starts or a customer sends a message. A workflow can reply to the customer, add internal notes, route the conversation, apply tags, change status, mark spam, or delete conversations that should not stay in your inbox.
+
+Workflows are built on a visual canvas. You choose when the workflow should run, add conditions for the situations it should care about, and connect actions in the order you want them to happen.
+
+---
+
+## When to use workflows
+
+Workflows are best for predictable support situations. They are not meant to replace your agents or teammates. They are meant to handle the repetitive parts around the conversation so agents and teammates can focus on the work that needs judgment.
+
+For example, you can use a workflow to send an instant reply when a customer writes in, route billing questions to a billing agent, tag conversations from VIP customers, add a private note for teammates, or close conversations that match a known spam pattern.
+
+Workflows are especially useful when your team already has a rule like "if this happens, do that." If the rule is clear enough to write down, it is usually a good candidate for a workflow.
+
+---
+
+## How workflows work
+
+Every workflow has a trigger, optional conditions, and one or more steps.
+
+The trigger decides when Weav should consider running the workflow. A workflow can run when a new conversation is created or when a new message is received. Trigger conditions narrow that down further by channel, customer, assignee, company, status, subject, message text, tags, or date created.
+
+After the trigger matches, Weav follows the workflow canvas from top to bottom. It runs each connected step in order. If the workflow reaches an If / Else branch, Weav checks the branch paths from top to bottom and follows the first path that matches. If no path matches, the Else path runs.
+
+---
+
+## Create a workflow
+
+Path: Settings -\> Workflows
+
+Open Settings, go to Workflows, and create a new workflow. Give it a clear name that describes the situation it handles, such as "Route billing questions" or "Tag VIP conversations."
+
+When the builder opens, start with the trigger. Choose whether the workflow should run for a new conversation or a new message. Then add trigger conditions to make sure the workflow only runs in the right situations.
+
+After the trigger is configured, add actions or branches to the canvas. Save your changes as you work. When the workflow is ready, publish it to make it active.
+
+<Note>
+  Publishing makes the workflow active. Moving it back to draft deactivates it, and it will no longer run until you publish it again.
+</Note>
+
+---
+
+## Triggers
+
+<Frame>
+  ![Workflow triggers](/images/Screenshot-2026-04-26-at-11.29.26-AM.png)
+</Frame>
+
+The trigger is the starting point of a workflow.
+
+Use New conversation when the automation should happen once at the beginning of a conversation. This is a good fit for welcome replies, initial routing, tagging, or spam handling.
+
+Use New message when the automation should happen when a customer sends a message. This is useful for routing based on message content, detecting keywords, or applying rules after the conversation is already open.
+
+Trigger conditions let you decide which conversations qualify. You can choose All, Email, or Chat, then add filters such as customer email, assignee, company, status, subject, message, tags, or date created.
+
+For example, a workflow for billing emails might use a New message trigger, limit the channel to Email, and add a message condition that contains "invoice" or "billing."
+
+---
+
+## Conditions
+
+Conditions keep workflows focused.
+
+Without conditions, a workflow can run broadly for every matching trigger. That may be right for a general welcome workflow, but most workflows should be narrower. Conditions let you say "only run this for chat conversations," "only run this when the message contains refund," or "only run this when the conversation has a specific tag."
+
+Conditions are checked together. If you add multiple filters, the workflow only runs when the conversation matches them. This helps prevent a workflow from taking action on the wrong conversation.
+
+Use conditions when the workflow is meant for a specific support situation, customer segment, channel, or topic.
+
+---
+
+## If / Else branches
+
+Branches let one workflow handle more than one path.
+
+An If / Else branch checks the rules you configure and routes the conversation down the first matching path. The Else path handles everything that did not match. You can also set the Else path to Do nothing, which stops the workflow when no condition matches.
+
+Branches are useful when the workflow starts the same way but should behave differently depending on the conversation.
+
+For example, you could create one workflow for new messages. If the message contains "billing," assign it to the billing agent. If it contains "bug," add a bug tag and forward it to your engineering triage address. Otherwise, do nothing and let the normal support flow continue.
+
+---
+
+## Actions
+
+<Frame>
+  ![Workflow actions](/images/Screenshot-2026-04-26-at-11.31.20-AM.png)
+</Frame>
+
+Actions are the steps a workflow performs after the trigger and conditions match.
+
+### Reply to the customer
+
+Use Reply to the customer when you want to send an automatic response. This can acknowledge a request, set expectations, or point customers to the right next step.
+
+Replies are best for simple, predictable messages. Avoid using a workflow reply for anything that needs personalized account details or careful judgment.
+
+### Forward
+
+Use Forward when a conversation should be sent to another email address. This is useful for billing teams, external vendors, escalation inboxes, or specialized support queues.
+
+### Add a note
+
+Use Add a note to leave private context for your team. Notes are internal and are not shown to the customer.
+
+This is useful when a workflow identifies something teammates should know, such as "This customer mentioned cancellation" or "This message matched the refund workflow."
+
+### Change status
+
+Use Change status to open or resolve a conversation. This is helpful for cleaning up conversations that do not need a teammate response, or reopening conversations that should be reviewed.
+
+### Mark as spam
+
+Use Mark as spam when a conversation matches a pattern your team does not want in the inbox.
+
+Be careful with spam workflows. Start with narrow conditions so legitimate customers are not accidentally marked as spam.
+
+### Set assignee
+
+Use Set assignee to assign a conversation to a teammate, an AI agent, or leave it unassigned. This is one of the most useful workflow actions because it helps conversations reach the right owner quickly.
+
+For example, you can assign billing questions to a billing agent, route VIP customer messages to a senior teammate, or unassign conversations that should return to the shared queue.
+
+### Add tags and remove tags
+
+Use Add tags to label conversations automatically. Tags make it easier to filter the inbox, report on support themes, and build follow-up workflows.
+
+Use Remove tags when a tag is no longer relevant after a condition is met.
+
+### Delete
+
+Use Delete only for conversations you are confident should be removed. Delete is a destructive action and should be used carefully.
+
+<Warning>
+  Do not use Delete as a general cleanup step. Use it only for clear cases like known test messages or spam patterns your team is comfortable removing automatically.
+</Warning>
+
+---
+
+## Example: route billing questions
+
+A common workflow is routing billing questions to the right owner.
+
+Start with a New message trigger. Set the channel to All, or choose Email if billing questions usually come through email. Add a condition where Message contains "billing," "invoice," or "subscription."
+
+Then add a Set assignee action and choose your billing agent or billing teammate. You can also add a tag such as Billing so the conversation is easy to report on later.
+
+This workflow helps customers reach the right support path quickly. It also keeps general support teammates from manually triaging the same billing questions every day.
+
+---
+
+## Troubleshooting
+
+### The workflow did not run
+
+Check that the workflow is active, not draft. Then review the trigger type, channel, and conditions. If the workflow uses a New message trigger, it will not run just because the conversation already exists; it needs a matching message event.
+
+### The workflow ran on the wrong conversation
+
+Add more specific trigger conditions. For example, limit by channel, message text, tags, assignee, or company. If the workflow uses a branch, check that the branch paths are ordered correctly because the first matching path runs.
+
+### An action was skipped
+
+Some actions can be skipped if required information is missing or stale. For example, an assignee might no longer exist, a tag might have been deleted, or a reply might be empty. Review the action configuration and update any missing references.
+
+### A reply did not send
+
+Make sure the reply body is not empty. Also check whether the conversation is assigned to an AI agent. **Workflow replies are skipped when the conversation is assigned to an agent**, so the agent can continue managing the customer response.
+
+### The workflow is no longer needed
+
+Move it back to draft to stop it from running. If you are sure the workflow is no longer useful, delete it from the workflows list.

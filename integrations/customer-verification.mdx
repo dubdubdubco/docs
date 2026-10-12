@@ -1,0 +1,103 @@
+---
+title: "Customer verification for agent actions"
+sidebarTitle: "Customer verification"
+description: "Learn how Weav verifies customers before AI agents use sensitive custom actions and integration tools."
+---
+
+Customer verification helps protect customers when an agent needs to use a sensitive action or integration tool.
+
+Some custom actions and integration tools can access private information or make changes in another system. For example, an agent might look up billing data in Stripe, create a billing portal link, update account details, or call one of your own internal APIs through a custom action. Verification adds a customer identity check before the action runs.
+
+This article explains how verification works for customer-facing chat and email conversations. It also explains what changes when the action is a custom action compared with a connected integration tool.
+
+---
+
+## What verification does
+
+When verification is required, Weav pauses the action before it runs. The customer verifies by email using a one-time 6-digit code. After the code is accepted, Weav resumes the saved action and gives the result back to the agent so it can continue helping the customer.
+
+Verification is conversation-specific. After a customer verifies in a conversation, Weav opens a short verification session for that same conversation so follow-up actions do not immediately ask the customer to verify again.
+
+<Note>
+  Verification confirms access to the email address the customer provides. It does not replace your team's policies for refunds, cancellations, account ownership, or billing changes.
+</Note>
+
+---
+
+## When verification is required
+
+For [custom actions](/integrations/custom-actions), verification is controlled by the custom action setting. When you create or edit a custom action, enable Requires customer verification if the action should only run after the customer verifies their email.
+
+For integrations like [Stripe](/integrations/stripe), verification is controlled by the integration tool. Some tools are read-only, some tools update data, and some tools expose sensitive records. Weav can require verification for specific integration tools based on the risk of the action. For example, Stripe tools require verification because the agent can access billing, invoice, customer, and subscription data.
+
+---
+
+## How chat verification works
+
+<Frame>
+  ![AI Agent Verification](/images/verification.png)
+</Frame>
+
+In chat conversations, verification happens inside the chat experience.
+
+When an agent tries to use a verified custom action or integration tool, Weav pauses the action and shows the customer a verification card. The card asks for an email address first. After the customer submits the email, Weav sends a 6-digit code to that address and the card changes to ask for the code.
+
+<Frame>
+  ![AI Agent Verification Code](/images/verification-code.png)
+</Frame>
+
+After the customer enters the correct code, Weav marks verification as successful and resumes the action that was waiting. The agent then receives the action result and can continue the conversation naturally.
+
+If the customer enters the wrong code, they can try again. If they need a new code, they can resend it. If they do not want to continue, they can cancel verification and the action will not run.
+
+---
+
+## How email verification works
+
+Email conversations use a different flow because there is no interactive verification card inside an email thread.
+
+When an agent needs to use a verified custom action or integration tool in an email conversation, Weav pauses the action and tells the agent to ask which email address the customer wants to verify. Weav does not automatically assume the customer's From address is the right email to verify. This matters because forwarded messages, shared inboxes, aliases, and support delegates can all make the sender address unreliable.
+
+After the customer replies with an email address, the agent submits that email for verification. Weav then prepares the 6-digit code. The code is sent only after the agent's acknowledgement reply goes out, so the customer is told what is happening before the verification email arrives.
+
+The customer then replies with the 6-digit code. The agent submits the code, Weav verifies it, and the saved action resumes. Once the action finishes, the agent can answer the original question using the result.
+
+In practice, the email flow usually looks like this:
+
+```txt
+Customer: Can you check my invoice?
+
+Agent: I can help with that. For security, which email address would you like to verify?
+
+Customer: alex@example.com
+
+Agent: Thanks. I am sending a 6-digit verification code to alex@example.com. Please reply with that code.
+
+Customer: 123456
+
+Agent: Thanks, you are verified. I found your latest invoice...
+```
+
+---
+
+## Troubleshooting
+
+### The customer is asked to verify
+
+This means the agent tried to use a custom action or integration tool that requires verification. The action has not run yet. Once the customer completes verification, Weav resumes the saved action.
+
+### The customer did not receive a code
+
+Ask the customer to check the email address they entered and look in spam or junk folders. In chat, they can resend the code from the verification card. In email, the agent can ask the customer to confirm the email address and continue the verification flow.
+
+### The code does not work
+
+Codes are 6 digits and expire after a limited time. If the code is expired or entered incorrectly too many times, the customer may need to start verification again.
+
+### The action still does not run after verification
+
+Check that the action or integration tool is still available to the agent, the connected integration is active, and the required customer information is present. Verification allows the action to continue, but the action can still fail if the external system rejects the request or the required IDs are missing.
+
+### The agent keeps asking for verification
+
+Verification sessions are temporary and scoped to one conversation. If the customer starts a new conversation, comes back after the session expires, or asks for another sensitive action later, Weav may ask them to verify again.

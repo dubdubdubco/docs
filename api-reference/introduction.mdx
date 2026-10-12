@@ -1,0 +1,202 @@
+---
+title: "Introduction"
+description: "Build secure, real-time customer support integrations with the Weav API and webhooks."
+---
+
+# Build on Weav
+
+The Weav Developer Platform helps you integrate AI-powered customer support directly into your product stack. Use the API to manage agents, conversations, messages, customers, companies, and training data in your workspace, with predictable, organization-scoped behavior that’s built for production integrations.
+
+Authentication is token-based and ability-scoped. Endpoints are versioned under `/v1`, return consistent JSON structures, and include clear error signaling—making it easier to handle retries, validation issues, and long-term maintenance as your integration grows.
+
+Webhooks complement the API by delivering real-time events to your systems when conversations, customers, agents, or training data change. Together, the API and webhooks give you the complete integration loop: send commands into Weav and react to updates from Weav in near real time.
+
+<CardGroup cols={2}>
+  
+</CardGroup>
+
+### What you can build
+
+- Sync conversations and customer records with your CRM
+- Trigger automations from live support events
+- Manage AI agents and training data programmatically
+- Build internal tooling for support operations and analytics
+
+<AccordionGroup>
+  <Accordion title="How API + webhooks work together">
+    1. Your app calls the Weav API to create or update resources.
+    2. Weav emits webhook events as those resources change.
+    3. Your backend processes events and updates your downstream systems.
+  </Accordion>
+  <Accordion title="Integration best practices">
+    - Use idempotent handlers for webhook processing
+    - Retry safely on transient failures
+    - Log request IDs and event IDs for traceability
+  </Accordion>
+</AccordionGroup>
+
+---
+
+# Authentication
+
+The Weav External API uses **Bearer token authentication** with workspace-scoped API keys.
+
+All external endpoints are versioned under `/v1` and require a valid token in the `Authorization` header.
+
+```
+Authorization: Bearer YOUR_API_KEY
+```
+
+> Your API key inherits your workspace context. Requests can only access resources within that workspace.
+
+---
+
+### Get an API Key
+
+You can create API keys in the Weav dashboard:
+
+1. Go to **Settings → API Tokens**
+2. Click **Create API token**
+3. Enter a name (and optional expiration)
+4. Create the token
+5. Copy the token immediately and store it securely
+
+> ⚠️ **Important**\
+> The plain-text token is shown only once at creation time.\
+> If you lose it, delete the token and create a new one.
+
+---
+
+### Use the Key in Requests
+
+Example using `curl`:
+
+```bash
+curl -X GET "https://api.weav.com/v1/agents" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Accept: application/json"
+```
+
+---
+
+### Common Authentication Failures
+
+### 401 — Unauthenticated
+
+Usually means the token is missing, malformed, or invalid.
+
+```json
+{
+  "error": "Unauthenticated",
+  "code": "UNAUTHENTICATED"
+}
+```
+
+---
+
+### 403 — Insufficient Token Ability
+
+The token is valid but does not include the ability required for the HTTP method.
+
+```json
+{
+  "error": "Token missing required ability: external-api:write",
+  "code": "INSUFFICIENT_TOKEN_ABILITY"
+}
+```
+
+---
+
+### Authentication Best Practices
+
+- Store API keys in a secure secrets manager (never in frontend code)
+- Set expirations where possible
+- Rotate keys regularly
+- Delete unused keys immediately
+- Send requests server-to-server over HTTPS only
+
+---
+
+# Error handling
+
+The Weav External API uses predictable HTTP status codes and machine-readable error codes for most authorization and business-rule failures. For client integrations, treat all non-2xx responses as failures, branch first on HTTP status, then on the error code when available.
+
+Most endpoint failures use a standard JSON envelope with `error` and optional `code`. Validation failures use Laravel’s validation shape (`message` + `errors`). A small number of endpoint-specific business-state responses may return custom payloads, so clients should handle both patterns safely.
+
+### Error response formats
+
+### Standard API error envelope
+
+```json
+{
+  "error": "Human-readable description",
+  "code": "ERROR_CODE",
+  "errors": {}
+}
+```
+
+- `error` _(string)_: human-readable message
+- `code` _(string, optional)_: machine-readable identifier
+- `errors` _(object, optional)_: additional context/details
+
+### Validation errors (422)
+
+Use this format when payload/query/path validation fails.
+
+```json
+{
+  "message": "The given data was invalid.",
+  "errors": {
+    "field_name": ["Validation message"]
+  }
+}
+```
+
+### Endpoint-specific business-state error example (422)
+
+Some flows can return a custom shape such as:
+
+```json
+{
+  "success": false,
+  "message": "No completed URLs found to resync"
+}
+```
+
+> Treat this as a non-retryable business-state error unless your app changes input/state before retrying.
+
+### HTTP status codes to handle
+
+| Status | Meaning                             | Typical cause                                   | Retry guidance             |
+| -----: | ----------------------------------- | ----------------------------------------------- | -------------------------- |
+| 400    | Bad request / business rule failure | Invalid assignment type, invalid type/code path | Usually no                 |
+| 401    | Unauthenticated                     | Missing/invalid bearer token                    | No (fix auth)              |
+| 403    | Forbidden                           | Missing token ability or prohibited operation   | No (fix permissions/input) |
+| 404    | Not found                           | Resource missing or outside workspace scope     | No (fix ID/scope)          |
+| 422    | Validation/business-state failure   | Invalid fields, unsupported state               | No (fix payload/state)     |
+| 500    | Server error                        | Internal processing/creation failure            | Sometimes (with backoff)   |
+
+### Common error codes
+
+| Code                         | Status | Description                                                                 |
+| ---------------------------- | -----: | --------------------------------------------------------------------------- |
+| `UNAUTHENTICATED`            | 401    | Request is not authenticated                                                |
+| `INSUFFICIENT_TOKEN_ABILITY` | 403    | Token lacks required ability (`external-api:read` or `external-api:write`)  |
+| `FORBIDDEN`                  | 403    | Operation blocked by business rule (for example protected agent operations) |
+| `RESOURCE_NOT_FOUND`         | 404    | Resource doesn’t exist in current workspace scope                           |
+| `INVALID_SENDER`             | 400    | Invalid message sender reference                                            |
+| `INVALID_ASSIGNEE`           | 400    | Invalid assignee reference                                                  |
+| `INVALID_ASSIGNEE_TYPE`      | 400    | Assignee type violates conversation/channel rules                           |
+| `INVALID_TYPE`               | 400    | Unsupported training data type                                              |
+| `INVALID_AGENT`              | 400    | Agent missing or outside current workspace                                  |
+| `URL_DISCOVERY_REQUIRED`     | 422    | URL training must use URL process endpoint                                  |
+| `NO_URLS_PROVIDED`           | 422    | URL process request had no valid URLs                                       |
+| `PROCESSING_FAILED`          | 500    | URL/training processing failed server-side                                  |
+| `CREATION_FAILED`            | 500    | Resource creation failed server-side                                        |
+
+### Best practices
+
+- Log status, code, and response body for all non-2xx responses.
+- Treat 4xx as request/integration issues, 5xx as transient/system issues.
+- Only retry idempotent operations, with exponential backoff and jitter.
+- Surface validation details from `errors` directly in developer tooling.

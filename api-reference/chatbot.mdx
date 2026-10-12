@@ -1,0 +1,634 @@
+---
+title: "Programmable Chatbot"
+---
+
+## Overview
+
+The Weav Chatbot Widget is a lightweight, embeddable chat interface that lets you add AI-powered customer support to any website.
+
+It renders a customizable launcher button that opens a chat interface in an iframe, and it can be controlled through a simple JavaScript API.
+
+<Info>
+  The configuration options below are to provide developers with more flexibility of the Weav chatbot experience. Most of these features can be controlled within the Weav application for non developers.
+</Info>
+
+## Features
+
+- Fully customizable appearance, including colors, icons, text, position, and theme
+- Mobile responsive with optimized layouts
+- Accessible, including ARIA labels and keyboard support with the `Esc` key
+- Lightweight with minimal performance impact
+- Secure iframe isolation
+- JavaScript API for initialization, teardown, and event handling
+
+---
+
+## Installation
+
+### Basic usage
+
+1. Include the widget script near the end of your `<body>` tag.
+2. Call `window.WeavWidget.init()` once the script has loaded.
+
+```html
+<script src="https://app.weav.com/widget.js" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!window.WeavWidget) {
+      console.error('Weav Chat Widget failed to load')
+      return
+    }
+
+    window.WeavWidget.init({
+      agentSlug: '{agent slug}',
+    })
+  })
+</script>
+```
+
+The widget automatically injects its mount node and lazy-loads the iframe the first time it opens.
+
+## Quick start example
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Website</title>
+  </head>
+  <body>
+    <!-- Your page content -->
+
+    <script src="https://app.weav.com/widget.js" defer></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        window.WeavWidget?.init({
+          agentSlug: '{agent slug}',
+          branding: {
+            accent_color: '#007bff',
+          },
+        })
+      })
+    </script>
+  </body>
+</html>
+```
+
+---
+
+## JavaScript API
+
+Once loaded, the script registers a single global object: `window.WeavWidget`.
+
+| Method | Description |
+| :-- | :-- |
+| `init(options?: InitializeOptions)` | Mounts the widget with the provided configuration. Calling `init()` again tears down the current instance and mounts a fresh one with the new options. |
+| `destroy()` | Unmounts the widget, clears queued actions, and removes any DOM nodes created by the widget. |
+| `open()` | Programmatically opens the widget. Throws if called before `init()`. |
+| `close()` | Programmatically closes the widget. Throws if called before `init()`. |
+| `sendMessage(message: string)` | Sends a message to the chat on behalf of the visitor. Call `open()` first if the widget is not already visible. Throws if called before `init()` or with an empty string. |
+| `on(event, listener)` | Subscribes to widget lifecycle events: opened, closed and load_failed. Returns an unsubscribe function. load_failed fires when the chat window doesn't load within 15 seconds after one automatic retry. The panel then shows a "Try again" / "Close" message. |
+| `setIdentityToken(token?: string \| null)` | Replaces the identity token without reloading the chat. The new token is used the next time the chat window loads, for example when the visitor starts a new conversation. Pass null to clear it. Throws if called before init(). |
+| `off(event, listener)` | Unsubscribes a previously registered listener. |
+| `isInitialized()` | Returns `true` when the widget is currently mounted. |
+| `setIdentityToken(token)` | Replaces the identity token without reloading the chat. The new token is used the next time the chat window loads, for example when the visitor starts a new conversation. Pass `null` to clear it. Call `init()` first. |
+
+---
+
+## Configuration options
+
+Pass configuration through the object supplied to `init()`.
+
+`agentSlug` is required. All other properties are optional.
+
+### Top-level options
+
+| Option | Type | Default | Description |
+| :-- | :-- | :-- | :-- |
+| `agentSlug` | `string` | **Required** | Unique identifier for your AI agent. You can get this from [https://app.weav.com/agents](https://app.weav.com/agents) → Chat tab |
+| `launcherZIndex` | `number` | `2147483000` | CSS z-index for widget elements |
+| `launcherHidden` | `boolean` | `false` | Hides the launcher button when set to `true`. The widget can still be opened programmatically with `open()` |
+| `mountElement` | `HTMLElement` | Auto-created | Optional DOM node to render into instead of creating one automatically |
+| `identityToken` | `string` | — | Signed token that identifies the logged-in user. See [Identify logged-in users](#identify-logged-in-users) |
+
+### Branding options
+
+Use the `branding` object to customize the launcher button.
+
+| Option | Type | Default | Description |  |
+| :-- | :-- | :-- | :-- | --- |
+| `branding.accent_color` | `string` | `string` | `#0f172a` | Primary accent color for the launcher background |
+| `branding.icon` | `string` | `null` | `null` | Icon shown on the launcher. Can be an emoji, text, or an image URL |
+| `branding.name` | `string` | `null` | `null` | Name used in the launcher button ARIA label, such as `Chat with AI Assistant` |
+
+### Widget options
+
+Use the `widget` object to customize behavior and appearance.
+
+| Option | Type | Default | Description |
+| :-- | :-- | :-- | :-- |
+| `widget.mode` | `enum` | `light` | Visual theme of the widget |
+| `widget.button_icon` | `enum` | `chat` | Icon type for the launcher button |
+| `widget.button_position` | `enum` | `bottom-right` | Position of the launcher button |
+| `widget.welcome_message` | `string` | `Hello! How can I help you today?` | Welcome message shown in the chat interface |
+| `widget.message_placeholder` | `string` | `Ask me anything...` | Placeholder text for the message input |
+| `widget.footer_text` | `string` | `null` | Custom footer text shown in the chat interface |
+
+---
+
+## Widget modes
+
+| Value | Description |
+| :-- | :-- |
+| `light` | Light theme with a white background |
+| `dark` | Dark theme with a dark background |
+
+## Button icons
+
+| Value | Description |
+| :-- | :-- |
+| `chat` | Default chat icon |
+
+## Button positions
+
+| Value | Description |
+| :-- | :-- |
+| `bottom-right` | Bottom-right corner of the viewport |
+| `bottom-left` | Bottom-left corner of the viewport |
+
+## Examples
+
+### Minimal configuration
+
+```text
+<script src="https://app.weav.com/widget.js" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.WeavWidget?.init({ agentSlug: '{agent slug}' })
+  })
+</script>
+```
+
+### Custom branding
+
+```text
+<script src="https://app.weav.com/widget.js" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.WeavWidget?.init({
+      agentSlug: '{agent slug}',
+      branding: {
+        accent_color: '#8b5cf6',
+        icon: '🤖',
+        name: 'AI Assistant',
+      },
+    })
+  })
+</script>
+```
+
+### Custom icon using an image URL
+
+```text
+<script src="https://app.weav.com/widget.js" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.WeavWidget?.init({
+      agentSlug: '{agent slug}',
+      branding: {
+        accent_color: '#10b981',
+        icon: 'https://example.com/logo.png',
+      },
+    })
+  })
+</script>
+```
+
+### Left-aligned launcher button
+
+```text
+<script src="https://app.weav.com/widget.js" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.WeavWidget?.init({
+      agentSlug: '{agent slug}',
+      widget: {
+        button_position: 'bottom-left',
+      },
+    })
+  })
+</script>
+```
+
+### Dark mode widget
+
+```text
+<script src="https://app.weav.com/widget.js" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.WeavWidget?.init({
+      agentSlug: '{agent slug}',
+      widget: {
+        mode: 'dark',
+      },
+    })
+  })
+</script>
+```
+
+### Custom widget messages
+
+```text
+<script src="https://app.weav.com/widget.js" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.WeavWidget?.init({
+      agentSlug: '{agent slug}',
+      widget: {
+        welcome_message: 'Welcome! How can we assist you?',
+        message_placeholder: 'Ask a question...',
+        footer_text: 'Powered by Weav',
+      },
+    })
+  })
+</script>
+```
+
+### High z-index for complex sites
+
+```text
+<script src="https://app.weav.com/widget.js" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.WeavWidget?.init({
+      agentSlug: '{agent slug}',
+      launcherZIndex: 999999,
+    })
+  })
+</script>
+```
+
+## Identify logged-in users
+
+Visitors start as anonymous by default. If your site or app has logged-in users, you can tell Weav who they are. Their conversations are then linked to the right customer in Weav, and your team can see who they're talking to without asking.
+
+Your server signs a short-lived token for the logged-in user, and you pass that token to the widget. Weav checks the signature on its servers before it trusts the token.
+
+<Steps>
+  <Step title="Generate your identity secret">
+    In Weav, go to [Agents](https://app.weav.com/agents), open the agent, and select the **Chat** tab. Under **Deploy → Identity verification**, click **Generate secret**, then copy it.
+
+    Store the secret on your server, for example as the `WEAV_WIDGET_IDENTITY_SECRET` environment variable. All agents in your workspace use the same secret.
+
+    <Warning>
+      Treat the secret like an API key. Never put it in browser JavaScript, in your page source, or in a public repository.
+    </Warning>
+  </Step>
+  <Step title="Sign a token on your server">
+    When a user is logged in, create a JWT for them, signed with your secret using `HS256`.
+
+    <CodeGroup>
+
+    ```js Node.js
+    // npm install jsonwebtoken
+    import jwt from 'jsonwebtoken'
+    
+    const identityToken = jwt.sign(
+      {
+        user_id: String(user.id),
+        email: user.email,
+        name: user.name,
+      },
+      process.env.WEAV_WIDGET_IDENTITY_SECRET,
+      { algorithm: 'HS256', expiresIn: '1h' },
+    )
+    ```
+
+    ```php PHP
+    // composer require firebase/php-jwt
+    use Firebase\JWT\JWT;
+    
+    $identityToken = JWT::encode([
+        'user_id' => (string) $user->id,
+        'email' => $user->email,
+        'name' => $user->name,
+        'exp' => time() + 3600,
+    ], getenv('WEAV_WIDGET_IDENTITY_SECRET'), 'HS256');
+    ```
+
+    ```python Python
+    # pip install pyjwt
+    import os
+    import time
+    import jwt
+    
+    identity_token = jwt.encode(
+        {
+            "user_id": str(user.id),
+            "email": user.email,
+            "name": user.name,
+            "exp": int(time.time()) + 3600,
+        },
+        os.environ["WEAV_WIDGET_IDENTITY_SECRET"],
+        algorithm="HS256",
+    )
+    ```
+
+    </CodeGroup>
+  </Step>
+  <Step title="Pass the token to the widget">
+    Render the token into the page and pass it to `init()` as `identityToken`.
+
+    ```html
+    <script src="https://app.weav.com/widget.js" defer></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        window.WeavWidget?.init({
+          agentSlug: '{agent slug}',
+          identityToken: '{token from your server}',
+        })
+      })
+    </script>
+    ```
+
+    For logged-out visitors, leave out `identityToken`. They'll chat anonymously, just like they do today.
+  </Step>
+</Steps>
+
+### Token claims
+
+<ParamField body="user_id" type="string | number" required>
+  Your stable, unique ID for the user, up to 100 characters. Weav matches customers on this value, so it must never change for a user and must never be reused for someone else. Don't use an email address as the ID.
+</ParamField>
+
+<ParamField body="exp" type="number" required>
+  When the token expires, as a Unix timestamp in seconds. Keep it short, for example 1 hour. Weav rejects tokens that expire more than 24 hours in the future.
+</ParamField>
+
+<ParamField body="email" type="string">
+  The user's email address. Weav adds it to the customer profile and treats it as verified (see [What changes for identified users](#what-changes-for-identified-users)).
+</ParamField>
+
+<ParamField body="name" type="string">
+  The user's full name, shown on the customer profile.
+</ParamField>
+
+<Warning>
+  Only include `email` if your app has already confirmed that the user owns that address, for example through a verification email or single sign-on. Weav trusts this email to run protected actions, such as looking up orders, without sending the user a verification code.
+</Warning>
+
+### What changes for identified users
+
+When a visitor has a valid token:
+
+- **Their conversation is linked to a customer.** The same `user_id` always maps to the same customer in your inbox. If no widget-identified customer has that `user_id` yet, Weav first looks for a customer with the same email and links to them. If none exists, it creates a new customer.
+- **They aren't asked for their email.** The lead form is skipped. When the chat is handed to a human, the "leave your email" prompt is skipped too.
+- **Protected actions run without a verification code.** If the token includes `email`, integration and custom actions that would normally email the user a one-time code run straight away, using that email. If the token has no `email`, the user still gets the usual verification code.
+
+### Conversation history and switching users
+
+- **Same user returns:** their previous conversation resumes.
+- **User logs out, or a different user logs in on the same browser:** a new conversation starts, so nobody sees someone else's chat history.
+- **Anonymous visitor logs in:** a new, identified conversation starts. Their anonymous chat isn't merged into their account.
+- **Single-page apps:** when the logged-in user changes without a page reload, call `window.WeavWidget.destroy()`, then call `init()` again with the new token, or with no token after logout.
+
+```js
+window.WeavWidget.destroy()
+window.WeavWidget.init({
+  agentSlug: '{agent slug}',
+  identityToken: newToken,
+})
+```
+
+### Keep tokens fresh on long-lived pages
+
+Tokens are short-lived, but some pages stay open for hours, like dashboards or single-page apps. To keep visitors identified on those pages, fetch a fresh token from your server before the current one expires, then pass it to `setIdentityToken()`.
+
+```js
+// Your server endpoint returns { token } for the logged-in user, or { token: null }
+async function refreshWeavToken() {
+  const response = await fetch('/weav/identity-token', { credentials: 'same-origin' })
+  if (!response.ok) return
+ 
+  const { token } = await response.json()
+  window.WeavWidget.setIdentityToken(token)
+}
+ 
+// Tokens last 1 hour, so refresh every 55 minutes
+setInterval(refreshWeavToken, 55 * 60 * 1000)
+```
+
+- **No interruption:** the open chat keeps going and isn't reloaded. The widget uses the new token the next time the chat window loads, for example when the visitor starts a new conversation.
+- **Same signing as before:** sign the refreshed token on your server, just like the first one. Never sign tokens in the browser.
+- **Logged out on the server:** if the user's session has ended, return `null` and call `setIdentityToken(null)`. The visitor's next conversation will be anonymous.
+
+<Note>
+  `setIdentityToken()` keeps the same user signed in. To switch to a different user without a page reload, call `destroy()` and then `init()` with the new token, as described above.
+</Note>
+
+### Security notes
+
+<AccordionGroup>
+  <Accordion title="What happens if a token is invalid or expired?">
+    The widget keeps working, and the visitor chats anonymously. Weav doesn't show an error to the visitor. This covers missing tokens, expired tokens, tokens with a bad signature, and tokens longer than 4096 characters.
+  </Accordion>
+
+  <Accordion title="How long should a token live?">
+    As short as practical. The token is passed to the chat window in its URL, so sign a fresh token on each page load and keep `exp` short, around 1 hour. If pages stay open longer than that, refresh the token with `setIdentityToken()` (see [Keep tokens fresh on long-lived pages](#keep-tokens-fresh-on-long-lived-pages)). Weav allows 60 seconds of clock difference between your server and ours.
+  </Accordion>
+
+  <Accordion title="How do I rotate the secret?">
+    On the same **Identity verification** setting, click **Regenerate**. Tokens signed with the old secret stop working immediately, so update the secret on your server straight away. Until you do, visitors chat anonymously.
+  </Accordion>
+
+  <Accordion title="Can I create the token in the browser?">
+    No. Anyone who can see the secret can sign a token for any user, so always sign tokens on your server.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Programmatic control
+
+- Use `window.WeavWidget.open()` to open the widget without user interaction
+- Use `window.WeavWidget.close()` to close it programmatically
+- Use `window.WeavWidget.destroy()` to remove the widget entirely
+- Use `window.WeavWidget.init(newOptions)` at any time to re-initialize the widget with updated configuration\
+
+Queued `open()` and `close()` calls made immediately after `init()` run as soon as the React tree is ready, so you do not need to wait for a callback.
+
+---
+
+## Events
+
+Use `on()` and `off()` to react to widget lifecycle events.
+
+```text
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const widget = window.WeavWidget
+    if (!widget) return
+
+    widget.init({ agentSlug: '{agent slug}' })
+
+    const unsubscribeOpened = widget.on('opened', () => {
+      console.log('Chat widget opened')
+    })
+
+    const unsubscribeClosed = widget.on('closed', () => {
+      console.log('Chat widget closed')
+    })
+
+    // Later
+    // unsubscribeOpened()
+    // unsubscribeClosed()
+  })
+</script>
+```
+
+Listeners run inside a guard so thrown errors are logged without breaking other listeners.
+
+---
+
+## Custom mount point
+
+Provide `mountElement` if you want to render the widget inside your own container.
+
+```text
+<div id="weav-mount"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const mount = document.getElementById('weav-mount')
+
+    window.WeavWidget?.init({
+      agentSlug: '{agent slug}',
+      mountElement: mount,
+    })
+  })
+</script>
+```
+
+The widget clears the provided element before rendering. Calling `destroy()` leaves the element in place so you can reuse it for future mounts.
+
+---
+
+## Triggering the widget from custom elements
+
+You can open the widget and optionally send a pre-filled message from any element on your page.
+
+This is useful when you want buttons, links, or other UI elements to start a specific conversation.
+
+### Open and send a message by element ID
+
+```text
+<button id="my-id">Ask about getting started</button>
+
+<script src="https://app.weav.com/widget.js" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.WeavWidget?.init({ agentSlug: '{agent slug}' })
+
+    document.getElementById('my-id')?.addEventListener('click', () => {
+      WeavWidget.open()
+      WeavWidget.sendMessage('How do I get started?')
+    })
+  })
+</script>
+```
+
+### Open and send a message by class name
+
+```text
+<button class="my-class">Ask about getting started</button>
+
+<script src="https://app.weav.com/widget.js" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.WeavWidget?.init({ agentSlug: '{agent slug}' })
+
+    document.querySelector('.my-class')?.addEventListener('click', () => {
+      WeavWidget.open()
+      WeavWidget.sendMessage('How do I get started?')
+    })
+  })
+</script>
+```
+
+### Multiple trigger buttons
+
+You can attach different messages to different elements.
+
+```text
+<button class="weav-trigger" data-message="How do I get started?">Getting Started</button>
+<button class="weav-trigger" data-message="How do I reset my password?">Reset Password</button>
+<button class="weav-trigger" data-message="What pricing plans are available?">Pricing</button>
+
+<script src="https://app.weav.com/widget.js" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.WeavWidget?.init({ agentSlug: '{agent slug}' })
+
+    document.querySelectorAll('.weav-trigger').forEach((button) => {
+      button.addEventListener('click', () => {
+        const message = button.getAttribute('data-message')
+
+        WeavWidget.open()
+
+        if (message) {
+          WeavWidget.sendMessage(message)
+        }
+      })
+    })
+  })
+</script>
+```
+
+---
+
+## Advanced usage
+
+### Programmatic control only
+
+The launcher button is visible by default.
+
+To hide it and control the widget entirely through JavaScript, set `launcherHidden: true` and use `open()` and `close()`.
+
+```text
+<button id="contact-support">Contact support</button>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const widget = window.WeavWidget
+    if (!widget) return
+
+    widget.init({
+      agentSlug: '{agent slug}',
+      launcherHidden: true,
+    })
+
+    document.getElementById('contact-support')?.addEventListener('click', () => {
+      widget.open()
+    })
+  })
+</script>
+```
+
+When `launcherHidden` is `true`, the launcher button is completely hidden and the widget can only be opened with `window.WeavWidget.open()`.
+
+This is useful when you want to integrate the widget into your own custom UI.
+
+### Re-initializing with new options
+
+```text
+window.WeavWidget.destroy()
+
+window.WeavWidget.init({
+  agentSlug: '{agent slug}',
+  branding: {
+    accent_color: '#22d3ee',
+  },
+})
+```
+
+Re-initializing ensures updated configuration values are applied cleanly.

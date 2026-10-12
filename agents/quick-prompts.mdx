@@ -1,0 +1,98 @@
+---
+title: 'Chat Quick Prompts'
+description: 'Add one-tap question buttons or links above the chat input so customers can start conversations quickly.'
+---
+
+## What are chat quick prompts?
+
+Chat quick prompts are optional **buttons** (or “chips”) that appear in your embedded chat widget **above the message input** when the conversation is still empty. They give visitors a one-tap way to ask a common question or open a link instead of typing.
+
+There are two kinds:
+
+1. **Ask the AI a question** – You define a **label** (what’s on the button) and the **question text** (what gets sent). When the visitor clicks, that question is sent as their first message and the agent replies to it like any other message.
+2. **Link to an external URL** – You define a **label** and a **URL**. When the visitor clicks, the link opens in a new tab. No message is sent to the agent.
+
+Quick prompts only show when there are **no messages yet** in the thread. After the first message, they disappear so the input stays clear. If you use a lead-capture form that must be filled before chatting, quick prompts are hidden until the form is completed or skipped (if allowed).
+
+---
+
+## How quick prompts work
+
+- **Where they appear**: In the chat widget, above the text input, only when the conversation is empty (and not blocked by the lead form).
+- **What the visitor sees**: The **label** you set for each prompt (e.g. “Opening hours”, “Contact sales”).
+- **Question type**: Clicking sends the **prompt text** as the visitor’s message. The agent receives it like a normal customer message and answers using its system prompt, knowledge base, and tools. There is no special handling—the AI simply replies to that text.
+- **Link type**: Clicking opens the **URL** in a new browser tab. No message is sent to the agent.
+- **Order**: Prompts are shown in the order they are listed in the dashboard (typically the order you added them).
+
+---
+
+## Where to configure quick prompts
+
+In the Weav dashboard: open your **Agent** → **Chat** tab → **Appearance** section → **Quick prompts** → **Manage**. Add, edit, or remove prompts and choose for each one:
+
+- **Label** – The short text on the button (e.g. “Opening hours”, “Pricing”).
+- **Type** – “Ask AI agent a question” or “Link to an external URL”.
+- **Question** (for question type) – The exact text sent as the visitor’s message (e.g. “What are your opening hours?”).
+- **URL** (for link type) – The full URL (e.g. `https://example.com/contact`).
+
+Each prompt is either a question or a link; you cannot set both for the same prompt.
+
+---
+
+## Good examples
+
+**Question prompts** – Clear label + question that matches what the agent can answer:
+
+| Label           | Question                                      | Why it works |
+|----------------|-----------------------------------------------|--------------|
+| Opening hours  | What are your opening hours?                  | Short, clear; agent can answer from knowledge. |
+| Shipping info  | What are the shipping options and delivery times? | Specific; fits one reply. |
+| Returns        | What is your return policy?                   | Common intent; easy for the agent to handle. |
+| Talk to sales  | I’d like to speak to someone in sales.       | Can trigger escalation if you have a rule for it. |
+
+**Link prompts** – When the answer lives on a page or you want to send users elsewhere:
+
+| Label           | URL example                    | Why it works |
+|----------------|-------------------------------|--------------|
+| Book a demo    | https://example.com/demo      | Direct path to conversion. |
+| Help center    | https://help.example.com     | Self-serve without using the agent. |
+| Contact us     | https://example.com/contact   | Clear next step. |
+
+---
+
+## Examples to avoid
+
+| Approach or label | Why to avoid |
+|-------------------|--------------|
+| Label and question don’t match (e.g. label “Hours”, question “Tell me about your company”) | Confusing; the agent answers the question, so the question should reflect the label. |
+| Very long question (e.g. a full paragraph) | Works technically but is heavy as a one-tap starter; keep it to a short sentence. |
+| Vague label (e.g. “Click here”, “More”) | Doesn’t tell the visitor what they’ll get; use a clear, specific label. |
+| Broken or non-HTTPS link for link type | Unreliable or insecure; use a valid, HTTPS URL. |
+| Same idea as both question and link | Pick one: either let the agent answer (question) or send them to a page (link). |
+
+---
+
+## Tips for writing quick prompts
+
+1. **Keep labels short** – A few words (e.g. “Opening hours”, “Returns”) so buttons stay readable.
+2. **Match the question to your knowledge** – Use question prompts for things your agent is trained on; use link prompts for pages, forms, or tools.
+3. **Order by importance** – Put the most common or important prompts first so they’re easy to spot.
+4. **Use question text the customer might type** – The prompt is sent as their message; phrasing it like a real question (e.g. “What are your opening hours?”) helps the agent answer naturally.
+5. **Use links for signup, demos, or long content** – If the best answer is “go to this page,” use a link prompt instead of a long agent reply.
+
+---
+
+## What quick prompts don’t do
+
+- **They don’t change the agent’s behavior** – Question prompts are just pre-filled customer messages. The agent uses the same system prompt, prohibited phrases, and escalation rules.
+- **They don’t show after the first message** – They only appear when the thread is empty so the UI stays simple once the conversation has started.
+- **They aren’t separate “flows”** – The agent doesn’t treat a quick-prompt message differently; it’s one more user message in the thread.
+
+---
+
+## Summary
+
+- **Quick prompts** = optional buttons above the chat input when the conversation is empty.
+- **Question type**: Label on the button; click sends the question text as the visitor’s message; the agent replies normally.
+- **Link type**: Label on the button; click opens the URL in a new tab; no message to the agent.
+- Configure under **Agent → Chat → Appearance → Quick prompts**. Use short, clear labels and questions (or URLs) that match what you want the visitor to get.
